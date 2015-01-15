@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Hierarchical extends Attribute {
 
-	HierarchicalNode root;
+	public HierarchicalNode root;
 	public HashMap<String, HierarchicalNode> hierarchicalMapping;
 
 	public Hierarchical() {

@@ -13,6 +13,9 @@ public class HierarchicalNode {
 	private int level;
 	public ArrayList<DataEntry> member;
 	public ArrayList<DataEntry> predictedMember;
+	private int TP;
+	private int FP;
+	private int FN;
 
 	public HierarchicalNode() {
 		// TODO Auto-generated constructor stub
@@ -21,6 +24,9 @@ public class HierarchicalNode {
 		
 		member = new ArrayList<DataEntry>();
 		predictedMember = new ArrayList<DataEntry>();
+		TP=0;
+		FP=0;
+		FN=0;
 	}
 	
 	public HierarchicalNode(int level) {
@@ -71,5 +77,29 @@ public class HierarchicalNode {
 	
 	public void addPredictedMember(DataEntry dataEntry){
 		predictedMember.add(dataEntry);
+	}
+
+	public int getTP() {
+		return TP;
+	}
+
+	public void setTP(int tP) {
+		TP = tP;
+	}
+
+	public int getFP() {
+		return FP;
+	}
+
+	public void setFP(int fP) {
+		FP = fP;
+	}
+
+	public int getFN() {
+		return FN;
+	}
+
+	public void setFN(int fN) {
+		FN = fN;
 	}
 }

@@ -2,15 +2,17 @@ package HMC;
 
 import java.util.ArrayList;
 
-import HMC.Reader.*;
-import HMC.Container.*;
+import HMC.Container.HMCDataContainer;
+import HMC.Container.Attribute.Hierarchical;
 import HMC.Container.Attribute.HierarchicalNode;
 import HMC.Container.Attribute.NominalAttribute;
 import HMC.Container.Data.DataEntry;
 import HMC.Container.Data.NominalParameter;
 import HMC.Container.Data.NumericParameter;
+import HMC.Evaluator.LBMacro;
+import HMC.Reader.ARFFReader;
 
-public class HMC {
+public class Main {
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
@@ -85,8 +87,9 @@ public class HMC {
 			ArrayList<HierarchicalNode> predictLabel = dataTrain.dataEntries.get(minDistanceIndex).getLabel();
 			//add predicted label
 			for(HierarchicalNode node:predictLabel){
-				dataEntryTest.addPredictedLabel(node);
-				node.addPredictedMember(dataEntryTest);
+				HierarchicalNode testNode = ((Hierarchical)dataTest.hierarchical).hierarchicalMapping.get(node.fullId);
+				dataEntryTest.addPredictedLabel(testNode);
+				testNode.addPredictedMember(dataEntryTest);
 			}
 			
 //			ArrayList<HierarchicalNode> realLabel = dataTest.dataEntries.get(i).getLabel();
@@ -127,6 +130,10 @@ public class HMC {
 		 
 //		 System.out.println(countAll);
 //		 System.out.println(countRightPrediction);
+		
+		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
+		LBMacro.Evaluate(dataTest.hierarchical);
+		
 		System.out.println("done");
 	}
 	

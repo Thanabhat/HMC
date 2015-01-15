@@ -6,7 +6,7 @@ import HMC.Container.Attribute.Hierarchical;
 import HMC.Container.Attribute.HierarchicalNode;
 
 public class LbMacro {
-	public static void Evaluate(Hierarchical hierarchical){
+	public static Double[] Evaluate(Hierarchical hierarchical){
 		double precision = Precision(hierarchical);
 		double recall = Recall(hierarchical);
 		double f1 = F1(hierarchical);
@@ -14,6 +14,8 @@ public class LbMacro {
 		System.out.println("Precision: "+precision);
 		System.out.println("Recall: "+recall);
 		System.out.println("F1: "+f1);
+		System.out.println();
+		return new Double[]{precision,recall,f1};
 	}
 	
 	public static double Precision(Hierarchical hierarchical){

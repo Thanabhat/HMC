@@ -9,6 +9,8 @@ import HMC.Container.Attribute.NominalAttribute;
 import HMC.Container.Data.DataEntry;
 import HMC.Container.Data.NominalParameter;
 import HMC.Container.Data.NumericParameter;
+import HMC.Evaluator.ELb;
+import HMC.Evaluator.Eb;
 import HMC.Evaluator.LbMacro;
 import HMC.Reader.ARFFReader;
 
@@ -25,7 +27,7 @@ public class Main {
 		 
 		 System.out.println(Utility.isMandatoryLeafNode(dataTrain.hierarchical, dataTrain.dataEntries));
 		 System.out.println(Utility.isMandatoryLeafNode(dataTest.hierarchical, dataTest.dataEntries));
-
+		 System.out.println();
 		 
 		 //K-NN
 		 
@@ -132,7 +134,9 @@ public class Main {
 //		 System.out.println(countRightPrediction);
 		
 		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-		LbMacro.Evaluate(dataTest.hierarchical);
+//		LbMacro.Evaluate(dataTest.hierarchical);
+//		Eb.Evaluate(dataTest.dataEntries);
+		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
 		
 		System.out.println("done");
 	}

@@ -9,7 +9,7 @@ import HMC.Container.Attribute.NominalAttribute;
 import HMC.Container.Data.DataEntry;
 import HMC.Container.Data.NominalParameter;
 import HMC.Container.Data.NumericParameter;
-import HMC.Evaluator.LBMacro;
+import HMC.Evaluator.LbMacro;
 import HMC.Reader.ARFFReader;
 
 public class Main {
@@ -132,7 +132,7 @@ public class Main {
 //		 System.out.println(countRightPrediction);
 		
 		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-		LBMacro.Evaluate(dataTest.hierarchical);
+		LbMacro.Evaluate(dataTest.hierarchical);
 		
 		System.out.println("done");
 	}

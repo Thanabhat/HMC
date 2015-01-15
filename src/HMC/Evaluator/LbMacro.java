@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import HMC.Container.Attribute.Hierarchical;
 import HMC.Container.Attribute.HierarchicalNode;
 
-public class LBMacro {
+public class LbMacro {
 	public static void Evaluate(Hierarchical hierarchical){
 		double precision = Precision(hierarchical);
 		double recall = Recall(hierarchical);

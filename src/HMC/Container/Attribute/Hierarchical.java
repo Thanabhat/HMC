@@ -9,7 +9,7 @@ public class Hierarchical extends Attribute {
 
 	public Hierarchical() {
 		// TODO Auto-generated constructor stub
-		root = new HierarchicalNode();
+		root = new HierarchicalNode(0);
 		hierarchicalMapping = new HashMap<String, HierarchicalNode>();
 	}
 
@@ -32,21 +32,6 @@ public class Hierarchical extends Attribute {
 	}
 
 	public void addNode(String nodePath) {
-		// String[] splitedNodePath = nodePath.split("/", 2);
-		//
-		// if (root.id == null) {
-		// root.id = splitedNodePath[0];
-		// } else if (!root.id.equals(splitedNodePath[0])) {
-		// // error, shouldn't reach this condition
-		// return;
-		// }
-		// HierarchicalNode node = root;
-		// if (splitedNodePath.length > 1) {
-		// node = addNode(root, splitedNodePath[1]);
-		// }
-		// node.setFullId(nodePath);
-		// hierarchicalMapping.put(nodePath, node);
-
 		HierarchicalNode node = addNode(root, nodePath);
 		node.setFullId(nodePath);
 		hierarchicalMapping.put(nodePath, node);
@@ -61,7 +46,7 @@ public class Hierarchical extends Attribute {
 				}
 			}
 		}
-		HierarchicalNode newNode = new HierarchicalNode();
+		HierarchicalNode newNode = new HierarchicalNode(node.getLevel()+1);
 		newNode.setId(splitedNodePath[0]);
 		newNode.addParent(node);
 		node.addChildren(newNode);

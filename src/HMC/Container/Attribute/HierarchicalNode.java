@@ -8,11 +8,19 @@ public class HierarchicalNode {
 	public ArrayList<HierarchicalNode> children;
 	public String id;
 	public String fullId;
+	private int level;
 	
 	public HierarchicalNode() {
 		// TODO Auto-generated constructor stub
 		parent = new ArrayList<HierarchicalNode>();
 		children = new ArrayList<HierarchicalNode>();
+	}
+	
+	public HierarchicalNode(int level) {
+		// TODO Auto-generated constructor stub
+		parent = new ArrayList<HierarchicalNode>();
+		children = new ArrayList<HierarchicalNode>();
+		this.level = level;
 	}
 	
 	public void addParent(HierarchicalNode h){
@@ -37,6 +45,14 @@ public class HierarchicalNode {
 
 	public void setFullId(String fullId) {
 		this.fullId = fullId;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 	
 }

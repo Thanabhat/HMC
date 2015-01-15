@@ -55,4 +55,7 @@ public class HierarchicalNode {
 		this.level = level;
 	}
 	
+	public boolean isLeaf() {
+		return children.size() == 0;
+	}
 }

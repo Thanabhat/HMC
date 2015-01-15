@@ -21,7 +21,8 @@ public class HMC {
 		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.train.arff");
 		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.arff");
 		 
-		 
+		 System.out.println(Utility.isMandatoryLeafNode(dataTrain.hierarchical, dataTrain.dataEntries));
+		 System.out.println(Utility.isMandatoryLeafNode(dataTest.hierarchical, dataTest.dataEntries));
 
 		 Double[] maxNumericParameter = new Double[dataTest.attributes.size()];
 		 Double[] minNumericParameter = new Double[dataTest.attributes.size()];

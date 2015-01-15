@@ -10,13 +10,14 @@ public class HierarchicalParameter extends Parameter {
 	
 	public ArrayList<HierarchicalNode> value;
 	
-	public HierarchicalParameter(String rawData, Attribute attribute) {
+	public HierarchicalParameter(String rawData, Attribute attribute, DataEntry dataEntry) {
 		// TODO Auto-generated constructor stub
 		super(rawData, attribute);
 		String[] splited = rawData.split("@");
 		this.value = new ArrayList<HierarchicalNode>();
 		for(String str : splited){
 			HierarchicalNode node = ((Hierarchical)attribute).hierarchicalMapping.get(str);
+			node.addMember(dataEntry);
 			this.addHierarchicalNode(node);
 		}
 	}

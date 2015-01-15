@@ -2,6 +2,8 @@ package HMC.Container.Attribute;
 
 import java.util.ArrayList;
 
+import HMC.Container.Data.DataEntry;
+
 
 public class HierarchicalNode {
 	public ArrayList<HierarchicalNode> parent;
@@ -9,17 +11,21 @@ public class HierarchicalNode {
 	public String id;
 	public String fullId;
 	private int level;
-	
+	public ArrayList<DataEntry> member;
+	public ArrayList<DataEntry> predictedMember;
+
 	public HierarchicalNode() {
 		// TODO Auto-generated constructor stub
 		parent = new ArrayList<HierarchicalNode>();
 		children = new ArrayList<HierarchicalNode>();
+		
+		member = new ArrayList<DataEntry>();
+		predictedMember = new ArrayList<DataEntry>();
 	}
 	
 	public HierarchicalNode(int level) {
 		// TODO Auto-generated constructor stub
-		parent = new ArrayList<HierarchicalNode>();
-		children = new ArrayList<HierarchicalNode>();
+		this();
 		this.level = level;
 	}
 	
@@ -57,5 +63,13 @@ public class HierarchicalNode {
 	
 	public boolean isLeaf() {
 		return children.size() == 0;
+	}
+	
+	public void addMember(DataEntry dataEntry){
+		member.add(dataEntry);
+	}
+	
+	public void addPredictedMember(DataEntry dataEntry){
+		predictedMember.add(dataEntry);
 	}
 }

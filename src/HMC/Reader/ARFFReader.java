@@ -94,7 +94,7 @@ public class ARFFReader {
 			} else if (attr instanceof NominalAttribute) {
 				dataEntry.addParameter(new NominalParameter(splited[i], attr));
 			} else if (container.attributes.get(i) instanceof Hierarchical) {
-				HierarchicalParameter param = new HierarchicalParameter(splited[i], attr);
+				HierarchicalParameter param = new HierarchicalParameter(splited[i], attr, dataEntry);
 				dataEntry.addParameter(param);
 				dataEntry.setLabel(param.getValue());
 			}

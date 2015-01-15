@@ -24,6 +24,10 @@ public class HMC {
 		 System.out.println(Utility.isMandatoryLeafNode(dataTrain.hierarchical, dataTrain.dataEntries));
 		 System.out.println(Utility.isMandatoryLeafNode(dataTest.hierarchical, dataTest.dataEntries));
 
+		 
+		 //K-NN
+		 
+		 //prepare numeric range
 		 Double[] maxNumericParameter = new Double[dataTest.attributes.size()];
 		 Double[] minNumericParameter = new Double[dataTest.attributes.size()];
 		 
@@ -43,9 +47,9 @@ public class HMC {
 			 }
 		}
 		 
-		
-		int countRightPrediction = 0;
-		int countAll = 0;
+		//predict
+//		int countRightPrediction = 0;
+//		int countAll = 0;
 		for (int i = 0; i < dataTest.dataEntries.size(); i++) {
 //			System.out.print(".");
 			Double minDistance = 1000000.0;
@@ -79,43 +83,51 @@ public class HMC {
 			}
 			
 			ArrayList<HierarchicalNode> predictLabel = dataTrain.dataEntries.get(minDistanceIndex).getLabel();
-			ArrayList<HierarchicalNode> realLabel = dataTest.dataEntries.get(i).getLabel();
+			//add predicted label
+			for(HierarchicalNode node:predictLabel){
+				dataEntryTest.addPredictedLabel(node);
+				node.addPredictedMember(dataEntryTest);
+			}
 			
-			int count=0;
-			for(int ii=0;ii<realLabel.size();ii++){
-				for(int jj=0;jj<predictLabel.size();jj++){
-					if(realLabel.get(ii).fullId.equals(predictLabel.get(jj).fullId)){
-						count++;
-					}
-				}
-			}
-			System.out.print(i+":"+count+"/"+realLabel.size());
-			System.out.print(" : ");
-			for(int ii=0;ii<realLabel.size();ii++){
-				if(ii>0){
-					System.out.print(", ");
-				}
-				System.out.print(realLabel.get(ii).getFullId());
-			}
-			System.out.print(" : ");
-			for(int ii=0;ii<predictLabel.size();ii++){
-				if(ii>0){
-					System.out.print(", ");
-				}
-				System.out.print(predictLabel.get(ii).getFullId());
-			}
-			System.out.println("");
-			if(count==realLabel.size()){
-				countRightPrediction++;
-			}
-			countAll += count;
+//			ArrayList<HierarchicalNode> realLabel = dataTest.dataEntries.get(i).getLabel();
+			
+//			int count=0;
+//			for(int ii=0;ii<realLabel.size();ii++){
+//				for(int jj=0;jj<predictLabel.size();jj++){
+//					if(realLabel.get(ii).fullId.equals(predictLabel.get(jj).fullId)){
+//						count++;
+//					}
+//				}
+//			}
+//			System.out.print(i+":"+count+"/"+realLabel.size());
+//			System.out.print(" : ");
+//			for(int ii=0;ii<realLabel.size();ii++){
+//				if(ii>0){
+//					System.out.print(", ");
+//				}
+//				System.out.print(realLabel.get(ii).getFullId());
+//			}
+//			System.out.print(" : ");
+//			for(int ii=0;ii<predictLabel.size();ii++){
+//				if(ii>0){
+//					System.out.print(", ");
+//				}
+//				System.out.print(predictLabel.get(ii).getFullId());
+//			}
+//			System.out.println("");
+//			if(count==realLabel.size()){
+//				countRightPrediction++;
+//			}
+//			countAll += count;
+			
 //			System.out.print(i+"="+minDistanceIndex+",");
 		}
 		 
 //		 dataTrain.hierarchical.printHierarchical();
 		 
-		 System.out.println(countAll);
-		 System.out.println(countRightPrediction);
+//		 System.out.println(countAll);
+//		 System.out.println(countRightPrediction);
+		System.out.println("done");
 	}
 	
 	public static double getNominalDistance(NominalAttribute attribute, NominalParameter param1, NominalParameter param2){

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import HMC.Reader.*;
 import HMC.Container.*;
 import HMC.Container.Attribute.HierarchicalNode;
+import HMC.Container.Attribute.NominalAttribute;
 import HMC.Container.Data.DataEntry;
 import HMC.Container.Data.NominalParameter;
 import HMC.Container.Data.NumericParameter;
@@ -64,11 +65,10 @@ public class HMC {
 							distance += 1.0;
 						}
 					}else if(dataEntryTest.parameters.get(k) instanceof NominalParameter){
-						if(testValue!=null&&trainValue!=null&&((String)testValue).equals((String)trainValue)){
-							distance += 0.0;
-						}else{
-							distance += 1.0;
-						}
+						distance += getNominalDistance(
+								(NominalAttribute)((NominalParameter)dataEntryTest.parameters.get(k)).getAttribute(), 
+								(NominalParameter)dataEntryTest.parameters.get(k), 
+								(NominalParameter)dataEntryTrain.parameters.get(k));
 					}
 				}
 				if(distance<minDistance){
@@ -115,6 +115,27 @@ public class HMC {
 		 
 		 System.out.println(countAll);
 		 System.out.println(countRightPrediction);
+	}
+	
+	public static double getNominalDistance(NominalAttribute attribute, NominalParameter param1, NominalParameter param2){
+		double res = 0.0;
+		ArrayList<String> possibleValue = attribute.getPossibleValue();
+		for(String value:possibleValue){
+			if(param1.getValue()==null||param2.getValue()==null){
+				res+=1.0;
+				continue;
+			}
+
+			double val1=0.0,val2=0.0;
+			if(value.equalsIgnoreCase((String)param1.getValue())){
+				val1=1.0;
+			}
+			if(value.equalsIgnoreCase((String)param2.getValue())){
+				val2=1.0;
+			}
+			res+=Math.abs(val1-val2);
+		}
+		return res;
 	}
 
 }

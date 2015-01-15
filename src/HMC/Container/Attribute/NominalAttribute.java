@@ -18,9 +18,9 @@ public class NominalAttribute extends Attribute {
 	}
 
 	@Override
-	public Object getPossibleValue() {
+	public ArrayList<String> getPossibleValue() {
 		// TODO Auto-generated method stub
-		return null;
+		return possibleValue;
 	}
 
 	@Override
@@ -37,9 +37,5 @@ public class NominalAttribute extends Attribute {
 		for (String str : value) {
 			possibleValue.add(str);
 		}
-	}
-
-	public int getPossibleValueSize(){
-		return possibleValue.size();
 	}
 }

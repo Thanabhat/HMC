@@ -29,15 +29,24 @@ public class Main {
 		 System.out.println(Utility.isMandatoryLeafNode(dataTest.hierarchical, dataTest.dataEntries));
 		 System.out.println();
 		 
-		 //K-NN
-		 
-		 //prepare numeric range
-		 Double[] maxNumericParameter = new Double[dataTest.attributes.size()];
-		 Double[] minNumericParameter = new Double[dataTest.attributes.size()];
-		 
+		 //normalize numeric data
+		 Double[] maxNumericParameter = new Double[dataTrain.attributes.size()];
+		 Double[] minNumericParameter = new Double[dataTrain.attributes.size()];
 		 java.util.Arrays.fill(maxNumericParameter, -1000000.0);
 		 java.util.Arrays.fill(minNumericParameter, 1000000.0);
 		 
+		for (int i = 0; i < dataTrain.dataEntries.size(); i++) {
+			 for(int j=0;j<maxNumericParameter.length;j++){
+				 Object parameter = dataTrain.dataEntries.get(i).parameters.get(j);
+				 if(parameter instanceof NumericParameter){
+					 Double value = ((NumericParameter) parameter).getValue();
+					 if(value!=null){
+						 maxNumericParameter[j] = maxNumericParameter[j]>value?maxNumericParameter[j]:value;
+						 minNumericParameter[j] = minNumericParameter[j]<value?minNumericParameter[j]:value;
+					 }
+				 }
+			 }
+		}
 		for (int i = 0; i < dataTest.dataEntries.size(); i++) {
 			 for(int j=0;j<maxNumericParameter.length;j++){
 				 Object parameter = dataTest.dataEntries.get(i).parameters.get(j);
@@ -50,6 +59,33 @@ public class Main {
 				 }
 			 }
 		}
+		
+		//nomalize
+		for (int i = 0; i < dataTrain.dataEntries.size(); i++) {
+			 for(int j=0;j<maxNumericParameter.length;j++){
+				 Object parameter = dataTrain.dataEntries.get(i).parameters.get(j);
+				 if(parameter instanceof NumericParameter){
+					 Double value = ((NumericParameter) parameter).getValue();
+					 if(value!=null){
+						 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j]));
+					 }
+				 }
+			 }
+		}
+		for (int i = 0; i < dataTest.dataEntries.size(); i++) {
+			 for(int j=0;j<maxNumericParameter.length;j++){
+				 Object parameter = dataTest.dataEntries.get(i).parameters.get(j);
+				 if(parameter instanceof NumericParameter){
+					 Double value = ((NumericParameter) parameter).getValue();
+					 if(value!=null){
+						 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j]));
+					 }
+				 }
+			 }
+		}
+		
+		 
+		 //K-NN
 		 
 		//predict
 //		int countRightPrediction = 0;
@@ -68,7 +104,7 @@ public class Main {
 					if(dataEntryTest.parameters.get(k) instanceof NumericParameter){
 						if(testValue!=null&&trainValue!=null){
 							Double diff = Math.abs((Double)testValue-(Double)trainValue);
-							diff /= (maxNumericParameter[k]-minNumericParameter[k]);
+//							diff /= (maxNumericParameter[k]-minNumericParameter[k]);
 							distance += Math.pow(diff, 2.0);
 						}else{
 							distance += 1.0;

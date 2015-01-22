@@ -36,7 +36,7 @@ public class KNN {
 //							diff /= (maxNumericParameter[k]-minNumericParameter[k]);
 							distance += Math.pow(diff, 2.0);
 						}else{
-							distance += 1.0;
+							distance += 0.5;
 						}
 					}else if(dataEntryTest.parameters.get(k) instanceof NominalParameter){
 						distance += getNominalDistance(
@@ -98,7 +98,7 @@ public class KNN {
 		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
 		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
 		
-		System.out.println("done");
+//		System.out.println("done");
 	}
 	
 	private static double getNominalDistance(NominalAttribute attribute, NominalParameter param1, NominalParameter param2){
@@ -106,7 +106,7 @@ public class KNN {
 		ArrayList<String> possibleValue = attribute.getPossibleValue();
 		for(String value:possibleValue){
 			if(param1.getValue()==null||param2.getValue()==null){
-				res+=1.0;
+				res+=0.5;
 				continue;
 			}
 

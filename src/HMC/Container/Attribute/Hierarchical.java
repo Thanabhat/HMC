@@ -86,4 +86,15 @@ public class Hierarchical extends Attribute {
 			printHierarchical(child, level + 1);
 		}
 	}
+	
+	public void clearAllPredictedMember(){
+		clearAllPredictedMember(root);
+	}
+
+	private void clearAllPredictedMember(HierarchicalNode node) {
+		node.clearPredictedMember();
+		for (HierarchicalNode child : node.children) {
+			clearAllPredictedMember(child);
+		}
+	}
 }

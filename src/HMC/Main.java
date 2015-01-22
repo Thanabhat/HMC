@@ -60,14 +60,18 @@ public class Main {
 			 }
 		}
 		
-		//nomalize
+		//normalize
 		for (int i = 0; i < dataTrain.dataEntries.size(); i++) {
 			 for(int j=0;j<maxNumericParameter.length;j++){
 				 Object parameter = dataTrain.dataEntries.get(i).parameters.get(j);
 				 if(parameter instanceof NumericParameter){
 					 Double value = ((NumericParameter) parameter).getValue();
 					 if(value!=null){
-						 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j]));
+						 if(maxNumericParameter[j]!=minNumericParameter[j]){
+							 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j]));
+						 }else{
+							 ((NumericParameter) parameter).setValue(0.5);
+						 }
 					 }
 				 }
 			 }
@@ -78,13 +82,20 @@ public class Main {
 				 if(parameter instanceof NumericParameter){
 					 Double value = ((NumericParameter) parameter).getValue();
 					 if(value!=null){
-						 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j]));
+						 if(maxNumericParameter[j]!=minNumericParameter[j]){
+							 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j]));
+						 }else{
+							 ((NumericParameter) parameter).setValue(0.5);
+						 }
 					 }
 				 }
 			 }
 		}
 		
+		System.out.println("#### K-NN ####\n");
 		KNN.Test(dataTrain, dataTest);
+		System.out.println("#### Neural Network ####\n");
+		new NeuralNetwork(dataTrain, dataTest);
 	}
 
 }

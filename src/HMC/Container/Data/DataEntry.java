@@ -30,4 +30,17 @@ public class DataEntry {
 	public void addPredictedLabel(HierarchicalNode node){
 		predictedLabel.add(node);
 	}
+	
+	public boolean hasLabel(String fullId){
+		for(HierarchicalNode node: label){
+			if(node.getFullId().equalsIgnoreCase(fullId)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void clearPredictedLabel(){
+		predictedLabel.clear();
+	}
 }

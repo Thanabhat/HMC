@@ -23,9 +23,18 @@ public class Eb {
 			}
 			Set<HierarchicalNode> intersection = new HashSet<HierarchicalNode>(T);
 			intersection.retainAll(P);
-			double precision = 1.0*intersection.size()/P.size();
-			double recall = 1.0*intersection.size()/T.size();
-			double f1 = (2.0*precision*recall)/(precision+recall);
+			double precision = 0.0;
+			if(P.size()>0){
+				precision = 1.0*intersection.size()/P.size();
+			}
+			double recall = 0.0;
+			if(T.size()>0){
+				recall = 1.0*intersection.size()/T.size();
+			}
+			double f1 = 0.0;
+			if(precision+recall>0){
+				f1 = (2.0*precision*recall)/(precision+recall);
+			}
 //			System.out.println("Precision: "+precision);
 //			System.out.println("Recall: "+recall);
 //			System.out.println("F1: "+f1);

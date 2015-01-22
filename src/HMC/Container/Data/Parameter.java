@@ -30,5 +30,9 @@ public abstract class Parameter {
 	public void setAttribute(Attribute attribute) {
 		this.attribute = attribute;
 	}
+	
+	public boolean hasValue(){
+		return getValue()!=null;
+	}
 
 }

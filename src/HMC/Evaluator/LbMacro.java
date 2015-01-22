@@ -1,5 +1,6 @@
 package HMC.Evaluator;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import HMC.Container.Attribute.Hierarchical;
@@ -21,6 +22,9 @@ public class LbMacro {
 	public static double Precision(Hierarchical hierarchical){
 		ArrayList<Double> precisions = new ArrayList<Double>();
 		DFSPrecision(hierarchical.root, precisions);
+		if(precisions.size()==0){
+			return 0.0;
+		}
 		double result = 0;
 		for(double pr : precisions){
 			result+=pr;
@@ -41,6 +45,9 @@ public class LbMacro {
 	public static double Recall(Hierarchical hierarchical){
 		ArrayList<Double> recalls = new ArrayList<Double>();
 		DFSRecall(hierarchical.root, recalls);
+		if(recalls.size()==0){
+			return 0.0;
+		}
 		double result = 0;
 		for(double re : recalls){
 			result+=re;
@@ -61,6 +68,9 @@ public class LbMacro {
 	public static double F1(Hierarchical hierarchical){
 		ArrayList<Double> f1s = new ArrayList<Double>();
 		DFSF1(hierarchical.root, f1s);
+		if(f1s.size()==0){
+			return 0.0;
+		}
 		double result = 0;
 		for(double f1 : f1s){
 			result+=f1;
@@ -80,7 +90,12 @@ public class LbMacro {
 		if(pr+re>0.0){
 			f1.add((2.0*pr*re)/(pr+re));
 		}
-//		System.out.println("("+pr+","+re+","+(2.0*pr*re)/(pr+re)+")");
+//		if(pr>1E-5||re>1E-5){
+//			DecimalFormat df = new DecimalFormat();
+//			df.setMaximumFractionDigits(4);
+//			df.setMinimumFractionDigits(4);
+//			System.out.println(node.getFullId()+"\t("+df.format(pr)+","+df.format(re)+","+df.format((2.0*pr*re)/(pr+re))+")");
+//		}
 		for(HierarchicalNode childNode:node.children){
 			DFSF1(childNode, f1);
 		}

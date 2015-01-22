@@ -102,4 +102,8 @@ public class HierarchicalNode {
 	public void setFN(int fN) {
 		FN = fN;
 	}
+	
+	public void clearPredictedMember(){
+		predictedMember.clear();
+	}
 }

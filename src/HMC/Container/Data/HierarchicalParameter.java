@@ -1,6 +1,7 @@
 package HMC.Container.Data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import HMC.Container.Attribute.Attribute;
 import HMC.Container.Attribute.Hierarchical;
@@ -20,6 +21,13 @@ public class HierarchicalParameter extends Parameter {
 			node.addMember(dataEntry);
 			this.addHierarchicalNode(node);
 		}
+		HashSet<HierarchicalNode> ancestors = new HashSet<HierarchicalNode>();
+		for(HierarchicalNode node:value){
+			ancestors.addAll(Hierarchical.getAllAncestor(node));
+		}
+		for(HierarchicalNode node:ancestors){
+			this.addHierarchicalNode(node);
+		}
 	}
 
 	@Override
@@ -36,6 +44,9 @@ public class HierarchicalParameter extends Parameter {
 	}
 	
 	public void addHierarchicalNode(HierarchicalNode h){
+		if(this.value.contains(h)){
+			return;
+		}
 		this.value.add(h);
 	}
 

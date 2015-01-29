@@ -33,7 +33,11 @@ public class DataEntry {
 	
 	public boolean hasLabel(String fullId){
 		for(HierarchicalNode node: label){
-			if(node.getFullId().equalsIgnoreCase(fullId)){
+			if(node.getFullId() == null) {
+				if(fullId == null){
+					return true;
+				}
+			} else if(node.getFullId().equalsIgnoreCase(fullId)){
 				return true;
 			}
 		}

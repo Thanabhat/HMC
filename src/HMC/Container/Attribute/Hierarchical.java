@@ -1,6 +1,8 @@
 package HMC.Container.Attribute;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Hierarchical extends Attribute {
 
@@ -11,6 +13,7 @@ public class Hierarchical extends Attribute {
 		// TODO Auto-generated constructor stub
 		root = new HierarchicalNode(0);
 		hierarchicalMapping = new HashMap<String, HierarchicalNode>();
+		hierarchicalMapping.put(null, root);
 	}
 
 	@Override
@@ -95,6 +98,19 @@ public class Hierarchical extends Attribute {
 		node.clearPredictedMember();
 		for (HierarchicalNode child : node.children) {
 			clearAllPredictedMember(child);
+		}
+	}
+
+	public static Set<HierarchicalNode> getAllAncestor(HierarchicalNode node){
+		Set<HierarchicalNode> res = new HashSet<HierarchicalNode>();
+		getAllAncestor(node, res);
+		return res;
+	}
+	
+	private static void getAllAncestor(HierarchicalNode node, Set<HierarchicalNode> s){
+		s.add(node);
+		for(HierarchicalNode parent: node.parent){
+			getAllAncestor(parent, s);
 		}
 	}
 }

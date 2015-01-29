@@ -66,7 +66,7 @@ public class NeuralNetwork {
 			train.iteration();
 			System.out.println("Epoch #" + epoch + " Error:" + train.getError());
 			epoch++;
-		} while(train.getError() > 0.01);
+		} while(train.getError() > 0.016);
 		train.finishTraining();
  
 		// test the neural network

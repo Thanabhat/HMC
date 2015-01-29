@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import HMC.Container.Attribute.Hierarchical;
 import HMC.Container.Attribute.HierarchicalNode;
 import HMC.Container.Data.DataEntry;
 
@@ -16,10 +17,10 @@ public class Eb {
 			HashSet<HierarchicalNode> P = new HashSet<HierarchicalNode>();
 			HashSet<HierarchicalNode> T = new HashSet<HierarchicalNode>();
 			for(HierarchicalNode node:dataEntry.label){
-				T.addAll(getAllAncestor(node));
+				T.addAll(Hierarchical.getAllAncestor(node));
 			}
 			for(HierarchicalNode node:dataEntry.predictedLabel){
-				P.addAll(getAllAncestor(node));
+				P.addAll(Hierarchical.getAllAncestor(node));
 			}
 			Set<HierarchicalNode> intersection = new HashSet<HierarchicalNode>(T);
 			intersection.retainAll(P);
@@ -53,18 +54,5 @@ public class Eb {
 		System.out.println();
 		
 		return new Double[]{sumPrecision,sumRecal,sumF1};
-	}
-	
-	private static Set<HierarchicalNode> getAllAncestor(HierarchicalNode node){
-		Set<HierarchicalNode> res = new HashSet<HierarchicalNode>();
-		getAllAncestor(node, res);
-		return res;
-	}
-	
-	private static void getAllAncestor(HierarchicalNode node, Set<HierarchicalNode> s){
-		s.add(node);
-		for(HierarchicalNode parent: node.parent){
-			getAllAncestor(parent, s);
-		}
 	}
 }

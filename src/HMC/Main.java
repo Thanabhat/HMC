@@ -96,6 +96,8 @@ public class Main {
 		KNN.Test(dataTrain, dataTest);
 		System.out.println("#### Neural Network ####\n");
 		new NeuralNetwork(dataTrain, dataTest);
+		
+		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
 	}
 
 }

@@ -10,8 +10,12 @@ import HMC.Container.Attribute.HierarchicalNode;
 public class HierarchicalParameter extends Parameter {
 	
 	public ArrayList<HierarchicalNode> value;
-	
+
 	public HierarchicalParameter(String rawData, Attribute attribute, DataEntry dataEntry) {
+		this(rawData,attribute,dataEntry,true);
+	}
+	
+	public HierarchicalParameter(String rawData, Attribute attribute, DataEntry dataEntry, boolean isAddAncestor) {
 		// TODO Auto-generated constructor stub
 		super(rawData, attribute);
 		String[] splited = rawData.split("@");

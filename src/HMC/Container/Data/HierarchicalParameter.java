@@ -31,6 +31,7 @@ public class HierarchicalParameter extends Parameter {
 		}
 		for(HierarchicalNode node:ancestors){
 			this.addHierarchicalNode(node);
+			node.addMember(dataEntry);
 		}
 	}
 

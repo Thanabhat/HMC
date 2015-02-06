@@ -25,9 +25,9 @@ public class Main {
 		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.train.arff");
 		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.arff");
 		 
-		 System.out.println(Utility.isMandatoryLeafNode(dataTrain.hierarchical, dataTrain.dataEntries));
-		 System.out.println(Utility.isMandatoryLeafNode(dataTest.hierarchical, dataTest.dataEntries));
-		 System.out.println();
+//		 System.out.println(Utility.isMandatoryLeafNode(dataTrain.hierarchical, dataTrain.dataEntries));
+//		 System.out.println(Utility.isMandatoryLeafNode(dataTest.hierarchical, dataTest.dataEntries));
+//		 System.out.println();
 		 
 		 //normalize numeric data
 		 Double[] maxNumericParameter = new Double[dataTrain.attributes.size()];
@@ -91,7 +91,9 @@ public class Main {
 				 }
 			 }
 		}
-		
+
+		 
+//		dataTrain.hierarchical.printHierarchical();
 		System.out.println("#### K-NN ####\n");
 		KNN.Test(dataTrain, dataTest);
 		System.out.println("#### Neural Network ####\n");

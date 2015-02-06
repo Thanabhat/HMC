@@ -77,14 +77,14 @@ public class Hierarchical extends Attribute {
 	}
 
 	public void printHierarchical() {
-		printHierarchical(root, 0);
+		printHierarchical(root, -1);
 	}
 
 	private void printHierarchical(HierarchicalNode node, int level) {
 		for (int i = 0; i < level; i++) {
-			System.out.print("| ");
+			System.out.print("      ");
 		}
-		System.out.println("|-" + node.id);
+		System.out.println("" + node.id+": "+node.member.size());
 		for (HierarchicalNode child : node.children) {
 			printHierarchical(child, level + 1);
 		}

@@ -59,7 +59,7 @@ public class Utility {
 		
 		System.out.print("\n");
 		
-		System.out.print("Real Label:");
+		System.out.print("Predict Label:");
 		ArrayList<String> predict = new ArrayList<String>();
 		for(HierarchicalNode node:dataEntry.predictedLabel){
 			if(node.getFullId()==null){

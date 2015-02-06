@@ -92,8 +92,6 @@ public class KNN {
 			
 //			System.out.print(i+"="+minDistanceIndex+",");
 		}
-		 
-//		 dataTrain.hierarchical.printHierarchical();
 		
 		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
 		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);

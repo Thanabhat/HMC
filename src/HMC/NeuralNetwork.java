@@ -33,7 +33,7 @@ public class NeuralNetwork {
 	private ArrayList<String> outputLabelOrder;
 	private int countInput,countOutput;
 	private double[][] inputTrain,inputTest,outputTrain,outputTest;
-	private final double THRESHOLD = 0.1;
+	private final double THRESHOLD = 0.12;
 	
 	public NeuralNetwork(HMCDataContainer dataTrain, HMCDataContainer dataTest) {
 		// TODO Auto-generated constructor stub
@@ -64,7 +64,7 @@ public class NeuralNetwork {
  
 		do {
 			train.iteration();
-			System.out.println("Epoch #" + epoch + " Error:" + train.getError());
+//			System.out.println("Epoch #" + epoch + " Error:" + train.getError());
 			epoch++;
 		} while(train.getError() > 0.016);
 		train.finishTraining();

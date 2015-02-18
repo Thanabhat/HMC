@@ -94,12 +94,17 @@ public class Main {
 
 		 
 //		dataTrain.hierarchical.printHierarchical();
-		System.out.println("#### K-NN ####\n");
-		KNN.Test(dataTrain, dataTest);
-		System.out.println("#### Neural Network ####\n");
-		new NeuralNetwork(dataTrain, dataTest);
 		
-		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
+//		System.out.println("#### K-NN ####\n");
+//		KNN.Test(dataTrain, dataTest);
+//		System.out.println("#### Neural Network ####\n");
+//		new NeuralNetwork(dataTrain, dataTest);
+		
+//		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
+		
+
+		HMCDataContainer clusPrediction = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.clus.pred.arff");
+		System.out.println("asdf");
 	}
 
 }

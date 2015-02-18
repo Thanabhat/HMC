@@ -10,6 +10,7 @@ import HMC.Container.Data.DataEntry;
 import HMC.Container.Data.HierarchicalParameter;
 import HMC.Container.Data.NominalParameter;
 import HMC.Container.Data.NumericParameter;
+import HMC.Container.Data.StringParameter;
 
 public class ARFFReader {
 	public static HMCDataContainer readFile(String filePath) throws IOException {
@@ -34,7 +35,9 @@ public class ARFFReader {
 				}
 				break;
 			case "@data":
-				data.hierarchical.rebuildMapping();
+				if(null != data.hierarchical){
+					data.hierarchical.rebuildMapping();
+				}
 				while ((line = reader.readLine()) != null) {
 					data.addDataEntry(getDataEntry(line, data));
 				}
@@ -57,6 +60,8 @@ public class ARFFReader {
 		} else if (splited[2].equalsIgnoreCase("hierarchical")) {
 			// should be reach only once
 			return getHierarchical(splited);
+		} else if (splited[2].equalsIgnoreCase("string")) {
+			return getStringAttribute(splited);
 		}
 		return null;
 	}
@@ -84,6 +89,12 @@ public class ARFFReader {
 		return h;
 	}
 
+	private static StringAttribute getStringAttribute(String[] splited) {
+		StringAttribute attribute = new StringAttribute();
+		attribute.setName(splited[1]);
+		return attribute;
+	}
+
 	private static DataEntry getDataEntry(String line, HMCDataContainer container) {
 		String[] splited = line.replace(" ", "").split(",");
 		DataEntry dataEntry = new DataEntry();
@@ -97,6 +108,8 @@ public class ARFFReader {
 				HierarchicalParameter param = new HierarchicalParameter(splited[i], attr, dataEntry);
 				dataEntry.addParameter(param);
 				dataEntry.setLabel(param.getValue());
+			} else if (attr instanceof StringAttribute) {
+				dataEntry.addParameter(new StringParameter(splited[i], attr));
 			}
 		}
 		return dataEntry;

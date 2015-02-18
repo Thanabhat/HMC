@@ -20,7 +20,7 @@ public class Main {
 		// TODO Auto-generated method stub
 
 		 
-		 
+/*
 //		 HMCDataContainer data = ARFFReader.readFile("toyHMC.arff");
 		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.train.arff");
 		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.arff");
@@ -91,7 +91,7 @@ public class Main {
 				 }
 			 }
 		}
-
+*/
 		 
 //		dataTrain.hierarchical.printHierarchical();
 		
@@ -103,8 +103,16 @@ public class Main {
 //		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
 		
 
+		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.arff");
 		HMCDataContainer clusPrediction = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.clus.pred.arff");
-		System.out.println("asdf");
+		
+		Utility.assignClusPredictionToContainer(dataTest, clusPrediction, 0.15);
+//		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
+
+		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
+		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+		
+		System.out.println("done");
 	}
 
 }

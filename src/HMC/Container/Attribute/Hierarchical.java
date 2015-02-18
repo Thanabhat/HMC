@@ -108,7 +108,10 @@ public class Hierarchical extends Attribute {
 	}
 	
 	private static void getAllAncestor(HierarchicalNode node, Set<HierarchicalNode> s){
-		s.add(node);
+		//if root, skip
+		if(null!=node.getFullId()){
+			s.add(node);
+		}
 		for(HierarchicalNode parent: node.parent){
 			getAllAncestor(parent, s);
 		}

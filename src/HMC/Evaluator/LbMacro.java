@@ -34,8 +34,10 @@ public class LbMacro {
 	}
 	
 	private static void DFSPrecision(HierarchicalNode node, ArrayList<Double> precisions){
-		if(node.getTP()+node.getFP()>0){
-			precisions.add((1.0*node.getTP())/(node.getTP()+node.getFP()));
+		if(null!=node.getFullId()){
+			if(node.getTP()+node.getFP()>0){
+				precisions.add((1.0*node.getTP())/(node.getTP()+node.getFP()));
+			}
 		}
 		for(HierarchicalNode childNode:node.children){
 			DFSPrecision(childNode, precisions);
@@ -57,8 +59,10 @@ public class LbMacro {
 	}
 	
 	private static void DFSRecall(HierarchicalNode node, ArrayList<Double> recalls){
-		if(node.getTP()+node.getFN()>0){
-			recalls.add((1.0*node.getTP())/(node.getTP()+node.getFN()));
+		if(null!=node.getFullId()){
+			if(node.getTP()+node.getFN()>0){
+				recalls.add((1.0*node.getTP())/(node.getTP()+node.getFN()));
+			}
 		}
 		for(HierarchicalNode childNode:node.children){
 			DFSRecall(childNode, recalls);
@@ -81,14 +85,16 @@ public class LbMacro {
 	
 	private static void DFSF1(HierarchicalNode node, ArrayList<Double> f1){
 		double re=0.0,pr=0.0;
-		if(node.getTP()+node.getFP()>0){
-			pr=(1.0*node.getTP())/(node.getTP()+node.getFP());
-		}
-		if(node.getTP()+node.getFN()>0){
-			re=(1.0*node.getTP())/(node.getTP()+node.getFN());
-		}
-		if(pr+re>0.0){
-			f1.add((2.0*pr*re)/(pr+re));
+		if(null!=node.getFullId()){
+			if(node.getTP()+node.getFP()>0){
+				pr=(1.0*node.getTP())/(node.getTP()+node.getFP());
+			}
+			if(node.getTP()+node.getFN()>0){
+				re=(1.0*node.getTP())/(node.getTP()+node.getFN());
+			}
+			if(pr+re>0.0){
+				f1.add((2.0*pr*re)/(pr+re));
+			}
 		}
 //		if(pr>1E-5||re>1E-5){
 //			DecimalFormat df = new DecimalFormat();

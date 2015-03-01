@@ -37,6 +37,9 @@ public class NeuralNetwork {
 	
 	public NeuralNetwork(HMCDataContainer dataTrain, HMCDataContainer dataTest) {
 		// TODO Auto-generated constructor stub
+
+		long start = System.currentTimeMillis();
+		
 		this.dataTrain = dataTrain;
 		this.dataTest = dataTest;
 		
@@ -81,13 +84,16 @@ public class NeuralNetwork {
 //			System.out.println("");
 //		}
 
+		double[][] outputTest = new double[dataTest.dataEntries.size()][countOutput];
+		for(int i=0;i<dataTest.dataEntries.size();i++){
+			network.compute(inputTest[i],outputTest[i]);
+		}
+		
 		for(double t=0.1;t<=0.201;t+=0.01){
 			this.THRESHOLD = t;
 
 			dataTest.hierarchical.clearAllPredictedMember();
-			double[][] outputTest = new double[dataTest.dataEntries.size()][countOutput];
 			for(int i=0;i<dataTest.dataEntries.size();i++){
-				network.compute(inputTest[i],outputTest[i]);
 				assignResult(dataTest.dataEntries.get(i), outputTest[i], dataTest.hierarchical);
 			}
 			
@@ -95,6 +101,10 @@ public class NeuralNetwork {
 			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
 			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
 		}
+		
+		long elapsedTimeMillis = System.currentTimeMillis()-start;
+		System.out.println("Time: "+elapsedTimeMillis+" ms");
+		System.out.println();
 		
 //		network.
  

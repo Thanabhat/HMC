@@ -18,6 +18,9 @@ public class KNN {
 	}
 	
 	public static void Test(HMCDataContainer dataTrain, HMCDataContainer dataTest){
+
+		long start = System.currentTimeMillis();
+		
 		//predict
 		for (int i = 0; i < dataTest.dataEntries.size(); i++) {
 //			System.out.print(".");
@@ -95,6 +98,10 @@ public class KNN {
 		
 		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
 		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+		
+		long elapsedTimeMillis = System.currentTimeMillis()-start;
+		System.out.println("Time: "+elapsedTimeMillis+" ms");
+		System.out.println();
 		
 //		System.out.println("done");
 	}

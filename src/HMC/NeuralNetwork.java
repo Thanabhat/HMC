@@ -33,7 +33,7 @@ public class NeuralNetwork {
 	private ArrayList<String> outputLabelOrder;
 	private int countInput,countOutput;
 	private double[][] inputTrain,inputTest,outputTrain,outputTest;
-	private final double THRESHOLD = 0.12;
+	private double THRESHOLD = 0.12;
 	
 	public NeuralNetwork(HMCDataContainer dataTrain, HMCDataContainer dataTest) {
 		// TODO Auto-generated constructor stub
@@ -81,15 +81,20 @@ public class NeuralNetwork {
 //			System.out.println("");
 //		}
 
-		dataTest.hierarchical.clearAllPredictedMember();
-		double[][] outputTest = new double[dataTest.dataEntries.size()][countOutput];
-		for(int i=0;i<dataTest.dataEntries.size();i++){
-			network.compute(inputTest[i],outputTest[i]);
-			assignResult(dataTest.dataEntries.get(i), outputTest[i], dataTest.hierarchical);
+		for(double t=0.1;t<=0.201;t+=0.01){
+			this.THRESHOLD = t;
+
+			dataTest.hierarchical.clearAllPredictedMember();
+			double[][] outputTest = new double[dataTest.dataEntries.size()][countOutput];
+			for(int i=0;i<dataTest.dataEntries.size();i++){
+				network.compute(inputTest[i],outputTest[i]);
+				assignResult(dataTest.dataEntries.get(i), outputTest[i], dataTest.hierarchical);
+			}
+			
+			System.out.println(this.THRESHOLD);
+			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
+			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
 		}
-		
-		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
 		
 //		network.
  

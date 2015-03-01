@@ -109,7 +109,7 @@ public class Main {
 //		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.arff");
 		HMCDataContainer clusPrediction = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.clus.pred.arff");
 
-		for(double d =0.1;d<=0.2;d+=0.01){
+		for(double d =0.1;d<=0.201;d+=0.01){
 			System.out.println(d);
 			dataTest.hierarchical.clearAllPredictedMember();
 			Utility.assignClusPredictionToContainer(dataTest, clusPrediction, d);

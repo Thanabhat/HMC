@@ -10,6 +10,10 @@ import HMC.Container.Data.DataEntry;
 
 public class Eb {
 	public static Double[] Evaluate(ArrayList<DataEntry> dataEntries){
+		return Evaluate(dataEntries, true);
+	}
+	
+	public static Double[] Evaluate(ArrayList<DataEntry> dataEntries, boolean printResult){
 
 		double sumPrecision=0.0,sumRecal=0.0,sumF1=0.0;
 		
@@ -47,11 +51,13 @@ public class Eb {
 		sumPrecision/=dataEntries.size();
 		sumRecal/=dataEntries.size();
 		sumF1/=dataEntries.size();
-		System.out.println("Example-based");
-		System.out.println("Precision: "+sumPrecision);
-		System.out.println("Recall: "+sumRecal);
-		System.out.println("F1: "+sumF1);
-		System.out.println();
+		if(printResult){
+			System.out.println("Example-based");
+			System.out.println("Precision: "+sumPrecision);
+			System.out.println("Recall: "+sumRecal);
+			System.out.println("F1: "+sumF1);
+			System.out.println();
+		}
 		
 		return new Double[]{sumPrecision,sumRecal,sumF1};
 	}

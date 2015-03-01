@@ -7,15 +7,22 @@ import HMC.Container.Attribute.Hierarchical;
 import HMC.Container.Attribute.HierarchicalNode;
 
 public class LbMacro {
+
 	public static Double[] Evaluate(Hierarchical hierarchical){
+		return Evaluate(hierarchical, true);
+	}
+	
+	public static Double[] Evaluate(Hierarchical hierarchical, boolean printResult){
 		double precision = Precision(hierarchical);
 		double recall = Recall(hierarchical);
 		double f1 = F1(hierarchical);
-		System.out.println("Label-based macro-average");
-		System.out.println("Precision: "+precision);
-		System.out.println("Recall: "+recall);
-		System.out.println("F1: "+f1);
-		System.out.println();
+		if(printResult){
+			System.out.println("Label-based macro-average");
+			System.out.println("Precision: "+precision);
+			System.out.println("Recall: "+recall);
+			System.out.println("F1: "+f1);
+			System.out.println();
+		}
 		return new Double[]{precision,recall,f1};
 	}
 	

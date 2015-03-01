@@ -106,13 +106,17 @@ public class Main {
 		
 
 		System.out.println("#### Clus ####\n");
-		dataTest.hierarchical.clearAllPredictedMember();
 //		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.arff");
 		HMCDataContainer clusPrediction = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.clus.pred.arff");
-		Utility.assignClusPredictionToContainer(dataTest, clusPrediction, 0.15);
-//		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
-		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+
+		for(double d =0.1;d<=0.2;d+=0.01){
+			System.out.println(d);
+			dataTest.hierarchical.clearAllPredictedMember();
+			Utility.assignClusPredictionToContainer(dataTest, clusPrediction, d);
+//			HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
+			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
+			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+		}
 		
 		System.out.println("done");
 	}

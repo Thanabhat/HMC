@@ -89,7 +89,7 @@ public class NeuralNetwork {
 			network.compute(inputTest[i],outputTest[i]);
 		}
 		
-		for(double t=0.1;t<=0.201;t+=0.01){
+		for(double t=0.05;t<=0.301;t+=0.01){
 			this.THRESHOLD = t;
 
 			dataTest.hierarchical.clearAllPredictedMember();

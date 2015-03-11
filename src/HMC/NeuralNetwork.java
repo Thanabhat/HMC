@@ -48,7 +48,7 @@ public class NeuralNetwork {
 		
 		network = new BasicNetwork();
 		network.addLayer(new BasicLayer(null,true,countInput));
-		network.addLayer(new BasicLayer(new ActivationSigmoid(),true,30));
+		network.addLayer(new BasicLayer(new ActivationSigmoid(),true,20));
 		network.addLayer(new BasicLayer(new ActivationSigmoid(),false,countOutput));
 		network.getStructure().finalizeStructure();
 		network.reset();
@@ -89,7 +89,7 @@ public class NeuralNetwork {
 			network.compute(inputTest[i],outputTest[i]);
 		}
 		
-		for(double t=0.05;t<=0.301;t+=0.01){
+		for(double t=0.16;t<=0.16;t+=0.01){
 			this.THRESHOLD = t;
 
 			dataTest.hierarchical.clearAllPredictedMember();

@@ -95,8 +95,8 @@ public class Main {
 		 
 //		dataTrain.hierarchical.printHierarchical();
 		
-		System.out.println("#### K-NN ####\n");
-		KNN.Test(dataTrain, dataTest);
+//		System.out.println("#### K-NN ####\n");
+//		KNN.Test(dataTrain, dataTest);
 		
 		System.out.println("#### Neural Network ####\n");
 		dataTest.hierarchical.clearAllPredictedMember();
@@ -105,18 +105,18 @@ public class Main {
 //		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
 		
 
-		System.out.println("#### Clus ####\n");
-//		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.arff");
-		HMCDataContainer clusPrediction = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.pred.arff");
-
-		for(double d =0.1;d<=0.201;d+=0.01){
-			System.out.println(d);
-			dataTest.hierarchical.clearAllPredictedMember();
-			Utility.assignClusPredictionToContainer(dataTest, clusPrediction, d);
-//			HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
-			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
-		}
+//		System.out.println("#### Clus ####\n");
+////		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/church_FUN/church_FUN.test.arff");
+//		HMCDataContainer clusPrediction = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.pred.arff");
+//
+//		for(double d =0.1;d<=0.201;d+=0.01){
+//			System.out.println(d);
+//			dataTest.hierarchical.clearAllPredictedMember();
+//			Utility.assignClusPredictionToContainer(dataTest, clusPrediction, d);
+////			HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
+//			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
+//			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+//		}
 		
 		System.out.println("done");
 	}

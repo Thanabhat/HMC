@@ -147,7 +147,7 @@ public class LbMacro {
 	private static void CalcDFS(HierarchicalNode node, ArrayList<Double> pr, ArrayList<Double> re, ArrayList<Double> f1){
 		double _re=0.0,_pr=0.0,_f1=0.0;
 		boolean _hasRe = false, _hasPr = false, _hasF1 = false;
-		if(null!=node.getFullId()){
+		if(null!=node.getFullId()&&node.member.size()>=0){
 			if(node.getTP()+node.getFP()>1E-7){
 				_pr=(1.0*node.getTP())/(node.getTP()+node.getFP());
 				pr.add(_pr);
@@ -163,7 +163,12 @@ public class LbMacro {
 				f1.add(_f1);
 				_hasF1 = true;
 			}
-			System.out.println(node.getTP()+", "+node.getFP()+", "+node.getFN()+", \t"+_pr+", "+_re+", "+_f1+", \t"+_hasPr+", "+_hasRe+", "+_hasF1);
+			if(_hasPr&&_hasRe&&_hasF1){
+				pr.add(_pr);
+				re.add(_re);
+				f1.add(_f1);
+//				System.out.println(node.getTP()+", "+node.getFP()+", "+node.getFN()+", \t"+_pr+", "+_re+", "+_f1+", \t"+_hasPr+", "+_hasRe+", "+_hasF1);
+			}
 		}
 		for(HierarchicalNode childNode:node.children){
 			CalcDFS(childNode, pr, re, f1);

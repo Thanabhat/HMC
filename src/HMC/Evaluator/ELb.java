@@ -8,8 +8,8 @@ import HMC.Container.Data.DataEntry;
 public class ELb {
 	
 	public static void Evaluate(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries){
-		Double[] lb = LbMacro.Evaluate(hierarchical, true);
-		Double[] eb = Eb.Evaluate(dataEntries, true);
+		Double[] lb = LbMacro.Evaluate(hierarchical, false);
+		Double[] eb = Eb.Evaluate(dataEntries, false);
 
 		double precision = 0.0, recall = 0.0, f1 = 0.0;
 		if(eb[0]+lb[0]>0){

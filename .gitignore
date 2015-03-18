@@ -34,3 +34,6 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
+
+datasets/datasets_FUN/*
+!datasets/datasets_FUN/church_FUN

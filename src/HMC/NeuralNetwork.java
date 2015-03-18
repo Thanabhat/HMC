@@ -203,11 +203,11 @@ public class NeuralNetwork {
 	}
 	
 	private void correctHierarchical(DataEntry dataEntry){
-		correctHierarchicalByAdd(dataEntry);
+		correctHierarchicalByAddAndRemove(dataEntry);
 	}
 	
 	private void correctHierarchicalByRemove(DataEntry dataEntry){
-		ArrayList<HierarchicalNode> nodeToRemove = new ArrayList<HierarchicalNode>();
+		Set<HierarchicalNode> nodeToRemove = new HashSet<HierarchicalNode>();
 		for(HierarchicalNode node : dataEntry.predictedLabel){
 			Set<HierarchicalNode> allAncestor = Hierarchical.getAllAncestor(node);
 			boolean isValid = true;
@@ -235,6 +235,37 @@ public class NeuralNetwork {
 					nodeToAdd.add(ancestor);
 				}
 			}
+		}
+		for(HierarchicalNode node:nodeToAdd){
+			dataEntry.addPredictedLabel(node);
+			node.addPredictedMember(dataEntry);
+		}
+	}
+	
+	private void correctHierarchicalByAddAndRemove(DataEntry dataEntry){
+		Set<HierarchicalNode> nodeToRemove = new HashSet<HierarchicalNode>();
+		Set<HierarchicalNode> nodeToAdd = new HashSet<HierarchicalNode>();
+		for(HierarchicalNode node : dataEntry.predictedLabel){
+			Set<HierarchicalNode> allAncestor = Hierarchical.getAllAncestor(node);
+			int count = 0;
+			for(HierarchicalNode ancestor: allAncestor){
+				if(!dataEntry.hasPredictedLabel(ancestor.getFullId())){
+					count--;
+				}else{
+					count++;
+				}
+			}
+			if(count<=0){
+				nodeToRemove.add(node);
+			}else{
+				for(HierarchicalNode ancestor: allAncestor){
+					nodeToAdd.add(ancestor);
+				}
+			}
+		}
+		for(HierarchicalNode node:nodeToRemove){
+			dataEntry.removePredictedLabel(node);
+			node.removePredictedMember(dataEntry);
 		}
 		for(HierarchicalNode node:nodeToAdd){
 			dataEntry.addPredictedLabel(node);

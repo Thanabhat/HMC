@@ -27,10 +27,6 @@ public class DataEntry {
 		this.label = label;
 	}
 	
-	public void addPredictedLabel(HierarchicalNode node){
-		predictedLabel.add(node);
-	}
-	
 	public boolean hasLabel(String fullId){
 		for(HierarchicalNode node: label){
 			if(node.getFullId() == null) {
@@ -42,6 +38,12 @@ public class DataEntry {
 			}
 		}
 		return false;
+	}
+	
+	public void addPredictedLabel(HierarchicalNode node){
+		if(!this.hasPredictedLabel(node.getFullId())){
+			predictedLabel.add(node);
+		}
 	}
 	
 	public boolean hasPredictedLabel(String fullId){

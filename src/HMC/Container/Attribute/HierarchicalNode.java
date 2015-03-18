@@ -82,7 +82,13 @@ public class HierarchicalNode {
 	}
 	
 	public void addPredictedMember(DataEntry dataEntry){
-		predictedMember.add(dataEntry);
+		if(!this.hasPredictedMember(dataEntry)){
+			predictedMember.add(dataEntry);
+		}
+	}
+	
+	public boolean hasPredictedMember(DataEntry dataEntry){
+		return predictedMember.contains(dataEntry);
 	}
 
 	public int getTP() {

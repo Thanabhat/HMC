@@ -2,6 +2,7 @@ package HMC;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.math3.util.OpenIntToDoubleHashMap.Iterator;
 import org.encog.Encog;
@@ -100,6 +101,14 @@ public class NeuralNetwork {
 			System.out.println(this.THRESHOLD);
 			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
 			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+			
+			System.out.println("Correct Predicted Label:");
+			for(int i=0;i<dataTest.dataEntries.size();i++){
+				correctHierarchical(dataTest.dataEntries.get(i));
+			}
+			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
+			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+			
 		}
 		
 		long elapsedTimeMillis = System.currentTimeMillis()-start;
@@ -188,6 +197,27 @@ public class NeuralNetwork {
 				dataEntry.addPredictedLabel(hierarchical.hierarchicalMapping.get(outputLabelOrder.get(i)));
 				hierarchical.hierarchicalMapping.get(outputLabelOrder.get(i)).addPredictedMember(dataEntry);
 			}
+		}
+//		correctHierarchical(dataEntry);
+	}
+	
+	private void correctHierarchical(DataEntry dataEntry){
+		ArrayList<HierarchicalNode> nodeToRemove = new ArrayList<HierarchicalNode>();
+		for(HierarchicalNode node : dataEntry.predictedLabel){
+			Set<HierarchicalNode> allAncestor = Hierarchical.getAllAncestor(node);
+			boolean isValid = true;
+			for(HierarchicalNode ancestor: allAncestor){
+				if(!dataEntry.hasPredictedLabel(ancestor.getFullId())){
+					isValid = false;
+				}
+			}
+			if(!isValid){
+				nodeToRemove.add(node);
+			}
+		}
+		for(HierarchicalNode node:nodeToRemove){
+			dataEntry.removePredictedLabel(node);
+			node.removePredictedMember(dataEntry);
 		}
 	}
 }

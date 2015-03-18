@@ -112,4 +112,8 @@ public class HierarchicalNode {
 	public void clearPredictedMember(){
 		predictedMember.clear();
 	}
+	
+	public boolean removePredictedMember(DataEntry dataEntry){
+		return predictedMember.remove(dataEntry);
+	}
 }

@@ -44,7 +44,24 @@ public class DataEntry {
 		return false;
 	}
 	
+	public boolean hasPredictedLabel(String fullId){
+		for(HierarchicalNode node: predictedLabel){
+			if(node.getFullId() == null) {
+				if(fullId == null){
+					return true;
+				}
+			} else if(node.getFullId().equalsIgnoreCase(fullId)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void clearPredictedLabel(){
 		predictedLabel.clear();
+	}
+	
+	public boolean removePredictedLabel(HierarchicalNode node){
+		return predictedLabel.remove(node);
 	}
 }

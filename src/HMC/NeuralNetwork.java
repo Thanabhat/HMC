@@ -1,6 +1,7 @@
 package HMC;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -202,6 +203,10 @@ public class NeuralNetwork {
 	}
 	
 	private void correctHierarchical(DataEntry dataEntry){
+		correctHierarchicalByAdd(dataEntry);
+	}
+	
+	private void correctHierarchicalByRemove(DataEntry dataEntry){
 		ArrayList<HierarchicalNode> nodeToRemove = new ArrayList<HierarchicalNode>();
 		for(HierarchicalNode node : dataEntry.predictedLabel){
 			Set<HierarchicalNode> allAncestor = Hierarchical.getAllAncestor(node);
@@ -218,6 +223,22 @@ public class NeuralNetwork {
 		for(HierarchicalNode node:nodeToRemove){
 			dataEntry.removePredictedLabel(node);
 			node.removePredictedMember(dataEntry);
+		}
+	}
+	
+	private void correctHierarchicalByAdd(DataEntry dataEntry){
+		Set<HierarchicalNode> nodeToAdd = new HashSet<HierarchicalNode>();
+		for(HierarchicalNode node : dataEntry.predictedLabel){
+			Set<HierarchicalNode> allAncestor = Hierarchical.getAllAncestor(node);
+			for(HierarchicalNode ancestor: allAncestor){
+				if(!dataEntry.hasPredictedLabel(ancestor.getFullId())){
+					nodeToAdd.add(ancestor);
+				}
+			}
+		}
+		for(HierarchicalNode node:nodeToAdd){
+			dataEntry.addPredictedLabel(node);
+			node.addPredictedMember(dataEntry);
 		}
 	}
 }

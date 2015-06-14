@@ -1,17 +1,6 @@
 package HMC;
 
-import java.util.ArrayList;
-
 import HMC.Container.HMCDataContainer;
-import HMC.Container.Attribute.Hierarchical;
-import HMC.Container.Attribute.HierarchicalNode;
-import HMC.Container.Attribute.NominalAttribute;
-import HMC.Container.Data.DataEntry;
-import HMC.Container.Data.NominalParameter;
-import HMC.Container.Data.NumericParameter;
-import HMC.Evaluator.ELb;
-import HMC.Evaluator.Eb;
-import HMC.Evaluator.LbMacro;
 import HMC.Reader.ARFFReader;
 
 public class Main {

@@ -86,20 +86,20 @@ public class ARFFConverter {
 						writer.print(doubleFormat((Double)param.getValue()));
 						writer.print(" ");
 					}else{
-						writer.print(doubleFormat(0.5));
+						writer.print(doubleFormat(0.0));
 						writer.print(" ");
 					}
 				}else if(param instanceof NominalParameter){
 					ArrayList<String> possibleValue = ((NominalAttribute)(((NominalParameter)param).getAttribute())).getPossibleValue();
 					for(String value:possibleValue){
 						if(param.getValue()==null){
-							writer.print(doubleFormat(0.5));
+							writer.print(doubleFormat(0.0));
 							writer.print(" ");
 						}else if(value.equalsIgnoreCase((String)param.getValue())){
-							writer.print(doubleFormat(1.0));
+							writer.print(doubleFormat(0.5));
 							writer.print(" ");
 						}else{
-							writer.print(doubleFormat(0.0));
+							writer.print(doubleFormat(-0.5));
 							writer.print(" ");
 						}
 					}

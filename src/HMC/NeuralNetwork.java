@@ -155,13 +155,13 @@ public class NeuralNetwork {
 					ArrayList<String> possibleValue = ((NominalAttribute)(((NominalParameter)param).getAttribute())).getPossibleValue();
 					for(String value:possibleValue){
 						if(param.getValue()==null){
-							res[i][j++]=0.5;
+							res[i][j++]=0.0;
 							continue;
 						}
 						if(value.equalsIgnoreCase((String)param.getValue())){
-							res[i][j++]=1.0;
+							res[i][j++]=0.5;
 						}else{
-							res[i][j++]=0.0;
+							res[i][j++]=-0.5;
 						}
 					}
 				}

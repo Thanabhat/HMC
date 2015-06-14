@@ -69,9 +69,9 @@ public class Utility {
 						 Double value = ((NumericParameter) parameter).getValue();
 						 if(value!=null){
 							 if(maxNumericParameter[j]!=minNumericParameter[j]){
-								 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j]));
+								 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j])-0.5);
 							 }else{
-								 ((NumericParameter) parameter).setValue(0.5);
+								 ((NumericParameter) parameter).setValue(0.0);
 							 }
 						 }
 					 }

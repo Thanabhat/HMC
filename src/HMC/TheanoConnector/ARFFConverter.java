@@ -44,6 +44,8 @@ public class ARFFConverter {
 		countAttr(dataTrain);
 		
 		printJOHMCFF(dataTrain, "datasets/datasets_FUN/"+dataset+"/"+dataset+".train.johmcff");
+		printJOHMCFF(dataValid, "datasets/datasets_FUN/"+dataset+"/"+dataset+".valid.johmcff");
+		printJOHMCFF(dataTest, "datasets/datasets_FUN/"+dataset+"/"+dataset+".test.johmcff");
 	}
 	
 	private static void countClass(HierarchicalNode node){

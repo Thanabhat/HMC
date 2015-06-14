@@ -57,7 +57,7 @@ public class ARFFConverter {
 	
 	private static void countAttr(HMCDataContainer dataContainer){
 		for(Attribute attr: dataContainer.attributes){
-			if(attr instanceof NumericAttribute || attr instanceof Hierarchical){
+			if(attr instanceof NumericAttribute){
 				attrCount++;
 			}else if(attr instanceof NominalAttribute){
 				attrCount+=((NominalAttribute)attr).getPossibleValue().size();

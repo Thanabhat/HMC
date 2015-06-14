@@ -30,67 +30,7 @@ public class Main {
 //		 System.out.println();
 		 
 		 //normalize numeric data
-		 Double[] maxNumericParameter = new Double[dataTrain.attributes.size()];
-		 Double[] minNumericParameter = new Double[dataTrain.attributes.size()];
-		 java.util.Arrays.fill(maxNumericParameter, -1000000.0);
-		 java.util.Arrays.fill(minNumericParameter, 1000000.0);
-		 
-		for (int i = 0; i < dataTrain.dataEntries.size(); i++) {
-			 for(int j=0;j<maxNumericParameter.length;j++){
-				 Object parameter = dataTrain.dataEntries.get(i).parameters.get(j);
-				 if(parameter instanceof NumericParameter){
-					 Double value = ((NumericParameter) parameter).getValue();
-					 if(value!=null){
-						 maxNumericParameter[j] = maxNumericParameter[j]>value?maxNumericParameter[j]:value;
-						 minNumericParameter[j] = minNumericParameter[j]<value?minNumericParameter[j]:value;
-					 }
-				 }
-			 }
-		}
-		for (int i = 0; i < dataTest.dataEntries.size(); i++) {
-			 for(int j=0;j<maxNumericParameter.length;j++){
-				 Object parameter = dataTest.dataEntries.get(i).parameters.get(j);
-				 if(parameter instanceof NumericParameter){
-					 Double value = ((NumericParameter) parameter).getValue();
-					 if(value!=null){
-						 maxNumericParameter[j] = maxNumericParameter[j]>value?maxNumericParameter[j]:value;
-						 minNumericParameter[j] = minNumericParameter[j]<value?minNumericParameter[j]:value;
-					 }
-				 }
-			 }
-		}
-		
-		//normalize
-		for (int i = 0; i < dataTrain.dataEntries.size(); i++) {
-			 for(int j=0;j<maxNumericParameter.length;j++){
-				 Object parameter = dataTrain.dataEntries.get(i).parameters.get(j);
-				 if(parameter instanceof NumericParameter){
-					 Double value = ((NumericParameter) parameter).getValue();
-					 if(value!=null){
-						 if(maxNumericParameter[j]!=minNumericParameter[j]){
-							 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j]));
-						 }else{
-							 ((NumericParameter) parameter).setValue(0.5);
-						 }
-					 }
-				 }
-			 }
-		}
-		for (int i = 0; i < dataTest.dataEntries.size(); i++) {
-			 for(int j=0;j<maxNumericParameter.length;j++){
-				 Object parameter = dataTest.dataEntries.get(i).parameters.get(j);
-				 if(parameter instanceof NumericParameter){
-					 Double value = ((NumericParameter) parameter).getValue();
-					 if(value!=null){
-						 if(maxNumericParameter[j]!=minNumericParameter[j]){
-							 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j]));
-						 }else{
-							 ((NumericParameter) parameter).setValue(0.5);
-						 }
-					 }
-				 }
-			 }
-		}
+		Utility.numericalNormalizer(new HMCDataContainer[]{dataTrain,dataTest});
 
 		 
 //		dataTrain.hierarchical.printHierarchical();

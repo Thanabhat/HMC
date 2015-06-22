@@ -1,6 +1,8 @@
 package HMC;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import HMC.Container.HMCDataContainer;
 import HMC.Container.Attribute.Attribute;
@@ -78,6 +80,83 @@ public class Utility {
 					 }
 				 }
 			}
+		}
+	}
+	
+	public static void correctHierarchical(ArrayList<DataEntry> dataEntries){
+		for(DataEntry dataEntry : dataEntries){
+			correctHierarchical(dataEntry);
+		}
+	}
+	
+	private static void correctHierarchical(DataEntry dataEntry){
+		correctHierarchicalByAddAndRemove(dataEntry);
+	}
+	
+	private static void correctHierarchicalByRemove(DataEntry dataEntry){
+		Set<HierarchicalNode> nodeToRemove = new HashSet<HierarchicalNode>();
+		for(HierarchicalNode node : dataEntry.predictedLabel){
+			Set<HierarchicalNode> allAncestor = Hierarchical.getAllAncestor(node);
+			boolean isValid = true;
+			for(HierarchicalNode ancestor: allAncestor){
+				if(!dataEntry.hasPredictedLabel(ancestor.getFullId())){
+					isValid = false;
+				}
+			}
+			if(!isValid){
+				nodeToRemove.add(node);
+			}
+		}
+		for(HierarchicalNode node:nodeToRemove){
+			dataEntry.removePredictedLabel(node);
+			node.removePredictedMember(dataEntry);
+		}
+	}
+	
+	private static void correctHierarchicalByAdd(DataEntry dataEntry){
+		Set<HierarchicalNode> nodeToAdd = new HashSet<HierarchicalNode>();
+		for(HierarchicalNode node : dataEntry.predictedLabel){
+			Set<HierarchicalNode> allAncestor = Hierarchical.getAllAncestor(node);
+			for(HierarchicalNode ancestor: allAncestor){
+				if(!dataEntry.hasPredictedLabel(ancestor.getFullId())){
+					nodeToAdd.add(ancestor);
+				}
+			}
+		}
+		for(HierarchicalNode node:nodeToAdd){
+			dataEntry.addPredictedLabel(node);
+			node.addPredictedMember(dataEntry);
+		}
+	}
+	
+	private static void correctHierarchicalByAddAndRemove(DataEntry dataEntry){
+		Set<HierarchicalNode> nodeToRemove = new HashSet<HierarchicalNode>();
+		Set<HierarchicalNode> nodeToAdd = new HashSet<HierarchicalNode>();
+		for(HierarchicalNode node : dataEntry.predictedLabel){
+			Set<HierarchicalNode> allAncestor = Hierarchical.getAllAncestor(node);
+			int count = 0;
+			for(HierarchicalNode ancestor: allAncestor){
+				if(!dataEntry.hasPredictedLabel(ancestor.getFullId())){
+					count--;
+				}else{
+					count++;
+				}
+			}
+			if(count<=0){
+				nodeToRemove.add(node);
+			}else{
+				for(HierarchicalNode ancestor: allAncestor){
+					nodeToAdd.add(ancestor);
+				}
+			}
+		}
+		for(HierarchicalNode node:nodeToRemove){
+			dataEntry.removePredictedLabel(node);
+			node.removePredictedMember(dataEntry);
+		}
+		for(HierarchicalNode node:nodeToAdd){
+			dataEntry.addPredictedLabel(node);
+			node.addPredictedMember(dataEntry);
 		}
 	}
 }

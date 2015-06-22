@@ -14,6 +14,7 @@ public class Utility {
 		for(DataEntry dataEntry: dataEntries){
 			for(HierarchicalNode node:dataEntry.label){
 				if(!node.isLeaf()){
+//					System.out.println(node.getFullId());
 					return false;
 				}
 			}

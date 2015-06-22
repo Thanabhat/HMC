@@ -17,7 +17,11 @@ public class JOHMCFFEvaluation {
 		final String dataset = "church_FUN";
 
 		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.arff");
+//		System.out.println(Utility.isMandatoryLeafNode(dataTest.hierarchical, dataTest.dataEntries));		 
+		
 		HMCDataContainer joPrediction = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.pred.johmcff");
+//		HMCDataContainer joPrediction = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.pred.mlp.johmcff");
+//		HMCDataContainer joPrediction = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.pred.mlpzero.johmcff");
 		dataTest.hierarchical.clearAllPredictedMember();
 		Utility.assignClusPredictionToContainer(dataTest, joPrediction, 0.5);
 //		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);

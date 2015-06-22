@@ -25,6 +25,7 @@ public class JOHMCFFEvaluation {
 		dataTest.hierarchical.clearAllPredictedMember();
 		Utility.assignClusPredictionToContainer(dataTest, joPrediction, 0.5);
 //		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
+		HMC.Utility.correctHierarchical(dataTest.dataEntries);
 		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
 		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
 	}

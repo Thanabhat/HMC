@@ -1,9 +1,6 @@
 package HMC;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.math3.util.OpenIntToDoubleHashMap.Iterator;
 import org.encog.Encog;
@@ -19,7 +16,6 @@ import org.encog.neural.networks.training.propagation.resilient.ResilientPropaga
 import HMC.Container.HMCDataContainer;
 import HMC.Container.Attribute.Attribute;
 import HMC.Container.Attribute.Hierarchical;
-import HMC.Container.Attribute.HierarchicalNode;
 import HMC.Container.Attribute.NominalAttribute;
 import HMC.Container.Attribute.NumericAttribute;
 import HMC.Container.Data.DataEntry;
@@ -104,9 +100,7 @@ public class NeuralNetwork {
 			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
 			
 			System.out.println("Correct Predicted Label:");
-			for(int i=0;i<dataTest.dataEntries.size();i++){
-				correctHierarchical(dataTest.dataEntries.get(i));
-			}
+			HMC.Utility.correctHierarchical(dataTest.dataEntries);
 			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
 			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
 			
@@ -155,13 +149,13 @@ public class NeuralNetwork {
 					ArrayList<String> possibleValue = ((NominalAttribute)(((NominalParameter)param).getAttribute())).getPossibleValue();
 					for(String value:possibleValue){
 						if(param.getValue()==null){
-							res[i][j++]=0.5;
+							res[i][j++]=0.0;
 							continue;
 						}
 						if(value.equalsIgnoreCase((String)param.getValue())){
-							res[i][j++]=1.0;
+							res[i][j++]=0.5;
 						}else{
-							res[i][j++]=0.0;
+							res[i][j++]=-0.5;
 						}
 					}
 				}
@@ -200,76 +194,5 @@ public class NeuralNetwork {
 			}
 		}
 //		correctHierarchical(dataEntry);
-	}
-	
-	private void correctHierarchical(DataEntry dataEntry){
-		correctHierarchicalByAddAndRemove(dataEntry);
-	}
-	
-	private void correctHierarchicalByRemove(DataEntry dataEntry){
-		Set<HierarchicalNode> nodeToRemove = new HashSet<HierarchicalNode>();
-		for(HierarchicalNode node : dataEntry.predictedLabel){
-			Set<HierarchicalNode> allAncestor = Hierarchical.getAllAncestor(node);
-			boolean isValid = true;
-			for(HierarchicalNode ancestor: allAncestor){
-				if(!dataEntry.hasPredictedLabel(ancestor.getFullId())){
-					isValid = false;
-				}
-			}
-			if(!isValid){
-				nodeToRemove.add(node);
-			}
-		}
-		for(HierarchicalNode node:nodeToRemove){
-			dataEntry.removePredictedLabel(node);
-			node.removePredictedMember(dataEntry);
-		}
-	}
-	
-	private void correctHierarchicalByAdd(DataEntry dataEntry){
-		Set<HierarchicalNode> nodeToAdd = new HashSet<HierarchicalNode>();
-		for(HierarchicalNode node : dataEntry.predictedLabel){
-			Set<HierarchicalNode> allAncestor = Hierarchical.getAllAncestor(node);
-			for(HierarchicalNode ancestor: allAncestor){
-				if(!dataEntry.hasPredictedLabel(ancestor.getFullId())){
-					nodeToAdd.add(ancestor);
-				}
-			}
-		}
-		for(HierarchicalNode node:nodeToAdd){
-			dataEntry.addPredictedLabel(node);
-			node.addPredictedMember(dataEntry);
-		}
-	}
-	
-	private void correctHierarchicalByAddAndRemove(DataEntry dataEntry){
-		Set<HierarchicalNode> nodeToRemove = new HashSet<HierarchicalNode>();
-		Set<HierarchicalNode> nodeToAdd = new HashSet<HierarchicalNode>();
-		for(HierarchicalNode node : dataEntry.predictedLabel){
-			Set<HierarchicalNode> allAncestor = Hierarchical.getAllAncestor(node);
-			int count = 0;
-			for(HierarchicalNode ancestor: allAncestor){
-				if(!dataEntry.hasPredictedLabel(ancestor.getFullId())){
-					count--;
-				}else{
-					count++;
-				}
-			}
-			if(count<=0){
-				nodeToRemove.add(node);
-			}else{
-				for(HierarchicalNode ancestor: allAncestor){
-					nodeToAdd.add(ancestor);
-				}
-			}
-		}
-		for(HierarchicalNode node:nodeToRemove){
-			dataEntry.removePredictedLabel(node);
-			node.removePredictedMember(dataEntry);
-		}
-		for(HierarchicalNode node:nodeToAdd){
-			dataEntry.addPredictedLabel(node);
-			node.addPredictedMember(dataEntry);
-		}
 	}
 }

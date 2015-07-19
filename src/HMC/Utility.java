@@ -24,6 +24,9 @@ public class Utility {
 		return true;
 	}
 	
+	/*
+	 * Assign prediction result read from Clus-HMC pred arff file
+	 */
 	public static void assignClusPredictionToContainer(HMCDataContainer container, HMCDataContainer prediction, double treshold){
 		Hierarchical hierarchical = container.hierarchical;
 		for(int i=0;i<prediction.dataEntries.size();i++){

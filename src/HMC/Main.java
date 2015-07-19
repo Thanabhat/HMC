@@ -30,7 +30,7 @@ public class Main {
 		
 		System.out.println("#### Neural Network ####\n");
 		dataTest.hierarchical.clearAllPredictedMember();
-		new NeuralNetwork(dataTrain, dataTest);
+		new NeuralNetworkConnector(dataTrain, dataTest);
 		
 //		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
 		

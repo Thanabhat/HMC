@@ -24,7 +24,7 @@ import HMC.Container.Data.NumericParameter;
 import HMC.Container.Data.Parameter;
 import HMC.Evaluator.ELb;
 
-public class NeuralNetwork {
+public class NeuralNetworkConnector {
 
 	private BasicNetwork network;
 	private HMCDataContainer dataTrain, dataTest;
@@ -33,7 +33,7 @@ public class NeuralNetwork {
 	private double[][] inputTrain,inputTest,outputTrain,outputTest;
 	private double THRESHOLD = 0.12;
 	
-	public NeuralNetwork(HMCDataContainer dataTrain, HMCDataContainer dataTest) {
+	public NeuralNetworkConnector(HMCDataContainer dataTrain, HMCDataContainer dataTest) {
 		// TODO Auto-generated constructor stub
 
 		long start = System.currentTimeMillis();

@@ -70,5 +70,66 @@ public class LogisticRegression {
 		}
 		
 		softmax(y);
-	}		
+	}	
+	
+	private static void test_lr() {
+		double learning_rate = 0.1;
+		int n_epochs = 500;
+		
+		int train_N = 6;
+		int test_N = 2;
+		int n_in = 6;
+		int n_out = 2;
+		
+		int[][] train_X = {
+			{1, 1, 1, 0, 0, 0},
+			{1, 0, 1, 0, 0, 0},
+			{1, 1, 1, 0, 0, 0},
+			{0, 0, 1, 1, 1, 0},
+			{0, 0, 1, 1, 0, 0},
+			{0, 0, 1, 1, 1, 0}
+		};
+		
+		int[][] train_Y = {
+			{1, 0},
+			{1, 0},
+			{1, 0},
+			{0, 1},
+			{0, 1},
+			{0, 1}
+		}; 
+		
+		// construct
+		LogisticRegression classifier = new LogisticRegression(train_N, n_in, n_out);
+		
+		// train 
+		for(int epoch=0; epoch<n_epochs; epoch++) {
+			for(int i=0; i<train_N; i++) {
+				classifier.train(train_X[i], train_Y[i], learning_rate);
+			}
+			//learning_rate *= 0.95;
+		}
+		
+		// test data
+		int[][] test_X = {
+			{1, 0, 1, 0, 0, 0},
+			{0, 0, 1, 1, 1, 0}
+		};
+		
+		double[][] test_Y = new double[test_N][n_out];
+		
+		
+		// test
+		for(int i=0; i<test_N; i++) {
+			classifier.predict(test_X[i], test_Y[i]);
+			for(int j=0; j<n_out; j++) {
+				System.out.print(test_Y[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
+	
+	public static void main(String[] args) {
+		test_lr();
+	}
 }

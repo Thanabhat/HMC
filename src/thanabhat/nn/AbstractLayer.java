@@ -31,11 +31,21 @@ public abstract class AbstractLayer {
 		}
 	}
 
-	abstract protected void initWeightW(double[][] w, Random rng);
+	protected void initWeightW(double[][] w, Random rng){
+		for (int i = 0; i < nOut; i++) {
+			for (int j = 0; j < nIn; j++) {
+				w[i][j] = Util.uniform(-1, 1, rng);
+			}
+		}
+	}
 
-	abstract protected void initWeightB(double[] b, Random rng);
+	protected void initWeightB(double[] b, Random rng){
+		for (int i = 0; i < nOut; i++) {
+			b[i] = Util.uniform(-1, 1, rng);
+		}
+	}
 
-	protected void CalculateMultiplication(double[][] x, double[][] y, int n) {
+	protected void calculateMultiplication(double[][] x, double[][] y, int n) {
 		for (int k = 0; k < n; k++) {
 			for (int i = 0; i < nOut; i++) {
 				y[k][i] = 0;
@@ -47,10 +57,10 @@ public abstract class AbstractLayer {
 		}
 	}
 
-	public void Predict(double[][] x, double[][] y, int n) {
-		CalculateMultiplication(x, y, n);
-		ActivationFunction(y, n);
+	public void predict(double[][] x, double[][] y, int n) {
+		calculateMultiplication(x, y, n);
+		activationFunction(y, n);
 	}
 
-	abstract protected void ActivationFunction(double[][] y, int n);
+	abstract protected void activationFunction(double[][] y, int n);
 }

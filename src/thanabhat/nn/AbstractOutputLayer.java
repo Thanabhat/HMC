@@ -9,5 +9,5 @@ public abstract class AbstractOutputLayer extends AbstractLayer {
 		super(nIn, nOut, w, b, rng);
 	}
 
-	abstract public void Train(double[][] y, double[][] yActual, double lr, double lrReg, double[] dPrev);
+	abstract public void train(double[][] y, double[][] yActual, double lr, double lrReg, double[] dPrev);
 }

@@ -9,5 +9,5 @@ public abstract class AbstractHiddenLayer extends AbstractLayer {
 		super(nIn, nOut, w, b, rng);
 	}
 
-	abstract public void Train(double[] d, double[] dPrev, double lr, double lrReg);
+	abstract public void train(double[] d, double[] dPrev, double lr, double lrReg);
 }

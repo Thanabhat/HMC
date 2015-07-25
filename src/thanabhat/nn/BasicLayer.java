@@ -73,10 +73,10 @@ public class BasicLayer {
 		}
 	}
 
-	public void bckProp(double[] d, double[] z, double[] dOut) {
+	public void bckProp(double[] d, double[] zPrev, double[] dOut) {
 		calcBckMul(d, dOut);
 		double[] gInv = new double[nIn];
-		invActFunc(z, gInv);
+		invActFunc(zPrev, gInv);
 		for (int i = 0; i < nIn; i++) {
 			dOut[i] = dOut[i] * gInv[i];
 		}
@@ -91,9 +91,9 @@ public class BasicLayer {
 		}
 	}
 
-	protected void invActFunc(double[] z, double[] out) {
+	protected void invActFunc(double[] zPrev, double[] out) {
 		for (int i = 0; i < nIn; i++) {
-			out[i] = Util.invSigmoid(z[i]);
+			out[i] = Util.invSigmoid(zPrev[i]);
 		}
 	}
 

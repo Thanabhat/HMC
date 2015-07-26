@@ -35,7 +35,7 @@ public class MLP {
 		}
 	}
 
-	public double train(double[][] x, int[][] y, double lr, double lrReg) {
+	public double train(double[][] x, double[][] y, double lr, double lrReg) {
 		int m = x.length;
 		double[] err = new double[m];
 		for (int i = 0; i < m; i++) {
@@ -55,7 +55,7 @@ public class MLP {
 			double[] yPred = aList.get(nLayers - 1);
 			err[i] = 0;
 			for (int j = 0; j < nOut; j++) {
-				diff[j] = (double) yPred[j] - y[i][j];
+				diff[j] = yPred[j] - y[i][j];
 				err[i] += Math.pow(diff[j], 2);
 			}
 
@@ -77,6 +77,22 @@ public class MLP {
 		}
 		return Util.average(err) / 2.0;
 	}
+
+	public void predict(double[][] x, double[][] y) {
+		int m = x.length;
+		for (int i = 0; i < m; i++) {
+			// Forward propagation
+			ArrayList<double[]> aList = new ArrayList<double[]>();
+			for (int j = 0; j < nLayers; j++) {
+				double[] z = new double[layerSizes[j]];
+				double[] a = new double[layerSizes[j]];
+				layers[j].fwdProp(j == 0 ? x[i] : aList.get(j - 1), z, a);
+				aList.add(a);
+			}
+			double[] yPred = aList.get(nLayers - 1);
+			y[i] = yPred;
+		}
+	};
 	
 	public void printWeight() {
 		for (int i = 0; i < nLayers; i++) {
@@ -95,7 +111,7 @@ public class MLP {
 			{0, 0, 1, 1, 0, 0},
 			{0, 0, 1, 1, 1, 0}
 		};
-		int[][] trainY = {
+		double[][] trainY = {
 			{1, 0},
 			{1, 0},
 			{1, 0},

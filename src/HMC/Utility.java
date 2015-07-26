@@ -93,7 +93,7 @@ public class Utility {
 	}
 	
 	private static void correctHierarchical(DataEntry dataEntry){
-		correctHierarchicalByAddAndRemove(dataEntry);
+		correctHierarchicalByRemove(dataEntry);
 	}
 	
 	private static void correctHierarchicalByRemove(DataEntry dataEntry){

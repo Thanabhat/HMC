@@ -106,9 +106,9 @@ public class MLP {
 		int[] hiddenLayerSize = {4};
 
 		MLP mlp = new MLP(trainX[0].length, trainY[0].length, hiddenLayerSize, null);
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10000; i++) {
 			System.out.println("============================ iterate " + (i + 1));
-			System.out.println(mlp.train(trainX, trainY, 0.1, 0.001));
+			System.out.println(mlp.train(trainX, trainY, 1, 0.001));
 			mlp.printWeight();
 		}
 	}

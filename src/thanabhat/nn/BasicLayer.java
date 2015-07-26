@@ -34,14 +34,14 @@ public class BasicLayer {
 	protected void initWeightW(double[][] w, Random rng) {
 		for (int i = 0; i < nOut; i++) {
 			for (int j = 0; j < nIn; j++) {
-				w[i][j] = Util.uniform(-1, 1, rng);
+				w[i][j] = Util.uniform(-1.0 / nIn, 1.0 / nIn, rng);
 			}
 		}
 	}
 
 	protected void initWeightB(double[] b, Random rng) {
 		for (int i = 0; i < nOut; i++) {
-			b[i] = Util.uniform(-1, 1, rng);
+			b[i] = Util.uniform(-1.0 / nIn, 1.0 / nIn, rng);
 		}
 	}
 

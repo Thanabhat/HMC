@@ -61,12 +61,12 @@ public class NeuralNetworkConnector {
 
 			System.out.println(this.THRESHOLD);
 			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries, false);
 
 			System.out.println("Correct Predicted Label:");
 			HMC.Utility.correctHierarchical(dataTest.dataEntries);
 			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries, false);
 		}
 
 		long elapsedTimeMillis = System.currentTimeMillis() - timeStart;

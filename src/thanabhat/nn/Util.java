@@ -12,7 +12,17 @@ public class Util {
 		return 1.0 / (1.0 + Math.pow(Math.E, -x));
 	}
 
-	public static double invSigmoid(double x) {
-		return Math.log(x / (1 - x));
+	public static double derivativeSigmoid(double x) {
+		double s = sigmoid(x);
+		return s * (1.0 - s);
+	}
+
+	public static double average(double[] x) {
+		double avg = 0.0;
+		for (int i = 0; i < x.length; i++) {
+			avg += x[i];
+		}
+		avg /= x.length;
+		return avg;
 	}
 }

@@ -12,9 +12,9 @@ public class OutputLayer extends BasicLayer {
 		for (int i = 0; i < nOut; i++) {
 			dOut[i] = diff[i];
 		}
-		double[] gInv = new double[nIn];
-		invActFunc(z, gInv);
-		for (int i = 0; i < nIn; i++) {
+		double[] gInv = new double[nOut];
+		dActFunc(z, gInv);
+		for (int i = 0; i < nOut; i++) {
 			dOut[i] = dOut[i] * gInv[i];
 		}
 	}

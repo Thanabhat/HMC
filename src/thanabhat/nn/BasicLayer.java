@@ -19,13 +19,13 @@ public class BasicLayer {
 
 		if (w == null) {
 			this.w = new double[this.nOut][this.nIn];
-			initWeightW(w, rng);
+			initWeightW(this.w, this.rng);
 		} else {
 			this.w = w;
 		}
 		if (b == null) {
-			b = new double[this.nOut];
-			initWeightB(b, rng);
+			this.b = new double[this.nOut];
+			initWeightB(this.b, this.rng);
 		} else {
 			this.b = b;
 		}
@@ -76,7 +76,7 @@ public class BasicLayer {
 	public void bckProp(double[] d, double[] zPrev, double[] dOut) {
 		calcBckMul(d, dOut);
 		double[] gInv = new double[nIn];
-		invActFunc(zPrev, gInv);
+		dActFunc(zPrev, gInv);
 		for (int i = 0; i < nIn; i++) {
 			dOut[i] = dOut[i] * gInv[i];
 		}
@@ -91,17 +91,27 @@ public class BasicLayer {
 		}
 	}
 
-	protected void invActFunc(double[] zPrev, double[] out) {
-		for (int i = 0; i < nIn; i++) {
-			out[i] = Util.invSigmoid(zPrev[i]);
+	protected void dActFunc(double[] zPrev, double[] out) {
+		for (int i = 0; i < zPrev.length; i++) {
+			out[i] = Util.derivativeSigmoid(zPrev[i]);
 		}
 	}
 
 	public void updateWeight(double[] d, double[] a, int m, double lr, double lrReg) {
 		for (int i = 0; i < nOut; i++) {
 			for (int j = 0; j < nIn; j++) {
-				w[i][j] += (lr * a[j] * d[i] + lrReg * w[i][j]) / m;
+				w[i][j] -= (lr * a[j] * d[i] + lrReg * w[i][j]) / m;
 			}
+		}
+	}
+
+	public void printWeight() {
+		for (int i = 0; i < nOut; i++) {
+			System.out.print(String.format("%.4f", b[i]));
+			for (int j = 0; j < nIn; j++) {
+				System.out.print(String.format(" %.4f", w[i][j]));
+			}
+			System.out.println();
 		}
 	}
 }

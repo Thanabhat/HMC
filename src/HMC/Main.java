@@ -45,7 +45,7 @@ public class Main {
 //			Utility.assignClusPredictionToContainer(dataTest, clusPrediction, d);
 ////			HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
 //			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-//			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+//			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries, false);
 //		}
 		
 		System.out.println("done");

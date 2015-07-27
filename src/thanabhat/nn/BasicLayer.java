@@ -99,6 +99,7 @@ public class BasicLayer {
 
 	public void updateWeight(double[] d, double[] a, int m, double lr, double lrReg) {
 		for (int i = 0; i < nOut; i++) {
+			b[i] -= (lr * d[i] + lrReg * b[i]) / m;
 			for (int j = 0; j < nIn; j++) {
 				w[i][j] -= (lr * a[j] * d[i] + lrReg * w[i][j]) / m;
 			}

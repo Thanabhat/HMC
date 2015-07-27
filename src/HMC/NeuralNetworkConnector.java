@@ -8,6 +8,7 @@ import org.encog.ml.data.MLDataSet;
 import org.encog.ml.data.basic.BasicMLDataSet;
 import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
+import org.encog.neural.networks.training.propagation.back.Backpropagation;
 import org.encog.neural.networks.training.propagation.resilient.ResilientPropagation;
 
 import HMC.Container.HMCDataContainer;
@@ -51,7 +52,7 @@ public class NeuralNetworkConnector {
 		encogNeuralNetwork();
 //		thanabhatMLP();
 
-		for (double t = 0.10; t <= 0.205; t += 0.01) {
+		for (double t = 0.05; t <= 0.305; t += 0.005) {
 			this.THRESHOLD = t;
 
 			dataTest.hierarchical.clearAllPredictedMember();
@@ -78,10 +79,10 @@ public class NeuralNetworkConnector {
 		int[] hiddenLayerSizes = new int[] { (int) (1.0 * (countInput + countOutput) / 2.0) };
 		MLP mlp = new MLP(countInput, countOutput, hiddenLayerSizes, null);
 		double error;
-		final int maxEpochs = 10;
+		final int maxEpochs = 30;
 		int epochs = 0;
 		do {
-			error = mlp.train(inputTrain, outputTrain, 10, 0.001);
+			error = mlp.train(inputTrain, outputTrain, 1, 0.001);
 			System.out.println("epoch " + epochs + ", error: " + error);
 			epochs++;
 		} while (error > 0.01 && epochs < maxEpochs);
@@ -93,8 +94,8 @@ public class NeuralNetworkConnector {
 
 		network = new BasicNetwork();
 		network.addLayer(new BasicLayer(null, true, countInput));
-		network.addLayer(new BasicLayer(new ActivationSigmoid(), true, 20));
-		network.addLayer(new BasicLayer(new ActivationSigmoid(), false, countOutput));
+		network.addLayer(new BasicLayer(new ActivationSigmoid(), true, (countInput+countOutput)/2));
+		network.addLayer(new BasicLayer(new ActivationSigmoid(), true, countOutput));
 		network.getStructure().finalizeStructure();
 		network.reset();
 
@@ -103,15 +104,16 @@ public class NeuralNetworkConnector {
 
 		// train the neural network
 		final ResilientPropagation train = new ResilientPropagation(network, trainingSet);
+//		final Backpropagation train = new Backpropagation(network, trainingSet);
+//		System.out.println(train.getLearningRate());
 
 		int epoch = 1;
 
 		do {
 			train.iteration();
-			// System.out.println("Epoch #" + epoch + " Error:" +
-			// train.getError());
+			 System.out.println("Epoch #" + epoch + " Error:" + train.getError());
 			epoch++;
-		} while (train.getError() > 0.016);
+		} while (train.getError() > 0.015);
 		train.finishTraining();
 
 		// test the neural network

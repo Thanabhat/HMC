@@ -11,7 +11,7 @@ public class ELb {
 		Evaluate(hierarchical, dataEntries, true);
 	}
 
-	public static void Evaluate(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries, boolean printDetailResult) {
+	public static double[] Evaluate(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries, boolean printDetailResult) {
 		// Double[] lb = LbMacro.Evaluate(hierarchical, printDetailResult);
 		Double[] lb = LbMicro.Evaluate(hierarchical, printDetailResult);
 		Double[] eb = Eb.Evaluate(dataEntries, printDetailResult);
@@ -31,5 +31,6 @@ public class ELb {
 		System.out.println("Recall: " + recall);
 		System.out.println("F1: " + f1);
 		System.out.println();
+		return new double[] { precision, recall, f1 };
 	}
 }

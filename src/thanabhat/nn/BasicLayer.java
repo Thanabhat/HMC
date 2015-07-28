@@ -35,6 +35,7 @@ public class BasicLayer {
 		for (int i = 0; i < nOut; i++) {
 			for (int j = 0; j < nIn; j++) {
 				w[i][j] = Util.uniform(-1.0 / nIn, 1.0 / nIn, rng);
+//				w[i][j] = 0.0;
 			}
 		}
 	}
@@ -42,6 +43,7 @@ public class BasicLayer {
 	protected void initWeightB(double[] b, Random rng) {
 		for (int i = 0; i < nOut; i++) {
 			b[i] = Util.uniform(-1.0 / nIn, 1.0 / nIn, rng);
+//			b[i] = 0.0;
 		}
 	}
 

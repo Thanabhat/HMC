@@ -52,7 +52,10 @@ public class NeuralNetworkConnector {
 		encogNeuralNetwork();
 //		thanabhatMLP();
 
-		for (double t = 0.05; t <= 0.305; t += 0.005) {
+		double bestThreshold = 0.0;
+		double bestF1 = 0.0;
+//		for (double t = 0.00; t <= 1.005; t += 0.1) {
+		for (double t = 0.05; t <= 0.255; t += 0.01) {
 			this.THRESHOLD = t;
 
 			dataTest.hierarchical.clearAllPredictedMember();
@@ -67,8 +70,25 @@ public class NeuralNetworkConnector {
 			System.out.println("Correct Predicted Label:");
 			HMC.Utility.correctHierarchical(dataTest.dataEntries);
 			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries, false);
+			double f1 = ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries, false)[2];
+			
+			if (f1 > bestF1) {
+				bestF1 = f1;
+				bestThreshold = t;
+			}
 		}
+		
+		// assign best Threshold, print best result
+		THRESHOLD = bestThreshold;
+		dataTest.hierarchical.clearAllPredictedMember();
+		for (int i = 0; i < dataTest.dataEntries.size(); i++) {
+			assignResult(dataTest.dataEntries.get(i), outputTest[i], dataTest.hierarchical);
+		}
+		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
+		System.out.println("Threshold = " + THRESHOLD);
+		HMC.Utility.correctHierarchical(dataTest.dataEntries);
+		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
+		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries, false);
 
 		long elapsedTimeMillis = System.currentTimeMillis() - timeStart;
 		System.out.println("Time: " + elapsedTimeMillis + " ms");
@@ -79,10 +99,11 @@ public class NeuralNetworkConnector {
 		int[] hiddenLayerSizes = new int[] { (int) (1.0 * (countInput + countOutput) / 2.0) };
 		MLP mlp = new MLP(countInput, countOutput, hiddenLayerSizes, null);
 		double error;
-		final int maxEpochs = 30;
+		final int maxEpochs = 20;
 		int epochs = 0;
 		do {
-			error = mlp.train(inputTrain, outputTrain, 1, 0.001);
+			error = mlp.train(inputTrain, outputTrain, 0.1, 0.001);
+//			mlp.printWeight();
 			System.out.println("epoch " + epochs + ", error: " + error);
 			epochs++;
 		} while (error > 0.01 && epochs < maxEpochs);

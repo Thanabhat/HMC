@@ -1,7 +1,6 @@
 package HMC;
 
 import HMC.Container.HMCDataContainer;
-import HMC.Evaluator.ELb;
 import HMC.Reader.ARFFReader;
 
 public class Main {
@@ -9,7 +8,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 
-		final String dataset = "church_FUN";
+		final String dataset = "eisen_FUN";
 
 //		 HMCDataContainer data = ARFFReader.readFile("toyHMC.arff");
 		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".train.arff");
@@ -30,7 +29,7 @@ public class Main {
 		
 		System.out.println("#### Neural Network ####\n");
 		dataTest.hierarchical.clearAllPredictedMember();
-		new NeuralNetwork(dataTrain, dataTest);
+		new NeuralNetworkConnector(dataTrain, dataTest);
 		
 //		HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
 		
@@ -45,7 +44,7 @@ public class Main {
 //			Utility.assignClusPredictionToContainer(dataTest, clusPrediction, d);
 ////			HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
 //			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-//			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+//			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries, false);
 //		}
 		
 		System.out.println("done");

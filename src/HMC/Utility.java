@@ -16,7 +16,7 @@ public class Utility {
 		for(DataEntry dataEntry: dataEntries){
 			for(HierarchicalNode node:dataEntry.label){
 				if(!node.isLeaf()){
-//					System.out.println(node.getFullId());
+					System.out.println(node.getFullId());
 					return false;
 				}
 			}
@@ -24,6 +24,9 @@ public class Utility {
 		return true;
 	}
 	
+	/*
+	 * Assign prediction result read from Clus-HMC pred arff file
+	 */
 	public static void assignClusPredictionToContainer(HMCDataContainer container, HMCDataContainer prediction, double treshold){
 		Hierarchical hierarchical = container.hierarchical;
 		for(int i=0;i<prediction.dataEntries.size();i++){
@@ -90,7 +93,7 @@ public class Utility {
 	}
 	
 	private static void correctHierarchical(DataEntry dataEntry){
-		correctHierarchicalByAddAndRemove(dataEntry);
+		correctHierarchicalByRemove(dataEntry);
 	}
 	
 	private static void correctHierarchicalByRemove(DataEntry dataEntry){

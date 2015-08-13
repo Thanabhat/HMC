@@ -97,7 +97,7 @@ public class KNN {
 		}
 		
 		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries, false);
 		
 		long elapsedTimeMillis = System.currentTimeMillis()-start;
 		System.out.println("Time: "+elapsedTimeMillis+" ms");

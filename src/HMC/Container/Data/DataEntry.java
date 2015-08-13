@@ -5,7 +5,7 @@ import HMC.Container.Attribute.HierarchicalNode;
 
 public class DataEntry {
 	public ArrayList<Parameter> parameters;
-	public ArrayList<HierarchicalNode> label;
+	public ArrayList<HierarchicalNode> label, rawLabel;
 	public ArrayList<HierarchicalNode> predictedLabel;
 	
 	public DataEntry() {
@@ -25,6 +25,14 @@ public class DataEntry {
 
 	public void setLabel(ArrayList<HierarchicalNode> label) {
 		this.label = label;
+	}
+
+	public ArrayList<HierarchicalNode> getRawLabel() {
+		return rawLabel;
+	}
+
+	public void setRawLabel(ArrayList<HierarchicalNode> rawLabel) {
+		this.rawLabel = rawLabel;
 	}
 	
 	public boolean hasLabel(String fullId){

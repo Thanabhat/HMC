@@ -108,6 +108,7 @@ public class ARFFReader {
 				HierarchicalParameter param = new HierarchicalParameter(splited[i], attr, dataEntry);
 				dataEntry.addParameter(param);
 				dataEntry.setLabel(param.getValue());
+				dataEntry.setRawLabel(param.getRawValue());
 			} else if (attr instanceof StringAttribute) {
 				dataEntry.addParameter(new StringParameter(splited[i], attr));
 			}

@@ -55,7 +55,7 @@ public class NeuralNetworkConnector {
 		for (double t = 0.05; t <= 0.305; t += 0.005) {
 			this.THRESHOLD = t;
 
-			dataTest.hierarchical.clearAllPredictedMember();
+			Utility.clearPrediction(dataTest);
 			for (int i = 0; i < dataTest.dataEntries.size(); i++) {
 				assignResult(dataTest.dataEntries.get(i), outputTest[i], dataTest.hierarchical);
 			}
@@ -67,7 +67,7 @@ public class NeuralNetworkConnector {
 			System.out.println("Correct Predicted Label:");
 			HMC.Utility.correctHierarchical(dataTest.dataEntries);
 			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
-			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries, false);
+			ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries, true);
 		}
 
 		long elapsedTimeMillis = System.currentTimeMillis() - timeStart;
@@ -207,7 +207,6 @@ public class NeuralNetworkConnector {
 	}
 
 	private void assignResult(DataEntry dataEntry, double[] results, Hierarchical hierarchical) {
-		dataEntry.clearPredictedLabel();
 		for (int i = 0; i < results.length; i++) {
 			if (results[i] > THRESHOLD) {
 				dataEntry.addPredictedLabel(hierarchical.hierarchicalMapping.get(outputLabelOrder.get(i)));

@@ -14,14 +14,33 @@ import HMC.Container.Data.NumericParameter;
 public class Utility {
 	public static boolean isMandatoryLeafNode(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries){
 		for(DataEntry dataEntry: dataEntries){
-			for(HierarchicalNode node:dataEntry.label){
-				if(!node.isLeaf()){
-					System.out.println(node.getFullId());
-					return false;
-				}
+			if(!isMandatoryLeafNode(hierarchical, dataEntry)){
+				return false;
 			}
 		}
 		return true;
+	}
+
+	public static boolean isMandatoryLeafNode(Hierarchical hierarchical, DataEntry dataEntry) {
+		for (HierarchicalNode node : dataEntry.getRawLabel()) {
+			if (!node.isLeaf()) {
+//				System.out.println(node.getFullId());
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static void createMandatoryLeafNode(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries) {
+		for (int i = dataEntries.size() - 1; i >= 0; i--) {
+			if (!isMandatoryLeafNode(hierarchical, dataEntries.get(i))) {
+				dataEntries.remove(i);
+			}
+		}
+	}
+	
+	public static void createMandatoryLeafNode(HMCDataContainer hmcDataContainer) {
+		createMandatoryLeafNode(hmcDataContainer.hierarchical, hmcDataContainer.dataEntries);
 	}
 	
 	/*
@@ -165,6 +184,13 @@ public class Utility {
 		for(HierarchicalNode node:nodeToAdd){
 			dataEntry.addPredictedLabel(node);
 			node.addPredictedMember(dataEntry);
+		}
+	}
+	
+	public static void clearPrediction(HMCDataContainer hmcDataContainer) {
+		hmcDataContainer.hierarchical.clearAllPredictedMember();
+		for (DataEntry dataEntry : hmcDataContainer.dataEntries) {
+			dataEntry.clearPredictedLabel();
 		}
 	}
 }

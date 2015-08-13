@@ -17,17 +17,19 @@ public class JOHMCFFEvaluation {
 		final String dataset = "eisen_FUN";
 
 		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.arff");
-//		System.out.println(Utility.isMandatoryLeafNode(dataTest.hierarchical, dataTest.dataEntries));		 
+//		System.out.println(Utility.isMandatoryLeafNode(dataTest.hierarchical, dataTest.dataEntries));		
+
+		Utility.createMandatoryLeafNode(dataTest);
 		
 		HMCDataContainer joPrediction = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.pred.johmcff");
 //		HMCDataContainer joPrediction = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.pred.mlp.johmcff");
 //		HMCDataContainer joPrediction = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.pred.mlpzero.johmcff");
 		double bestT = 0.05, bestF1 = 0.0;
-		for(double t = 0.25;t<0.5;t+=0.01){
+		for(double t = 0.05;t<0.4;t+=0.01){
 //			System.out.println("================================");
 //			System.out.println("treshold = "+t);
 //			System.out.println();
-			dataTest.hierarchical.clearAllPredictedMember();
+			Utility.clearPrediction(dataTest);
 			Utility.assignClusPredictionToContainer(dataTest, joPrediction, t);
 //			HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
 			HMC.Utility.correctHierarchical(dataTest.dataEntries);

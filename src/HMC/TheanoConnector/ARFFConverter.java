@@ -37,6 +37,10 @@ public class ARFFConverter {
 		HMCDataContainer dataValid = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".valid.arff");
 		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.arff");
 		 
+		Utility.createMandatoryLeafNode(dataTrain);
+		Utility.createMandatoryLeafNode(dataValid);
+		Utility.createMandatoryLeafNode(dataTest);
+		
 		 //normalize numeric data
 		Utility.numericalNormalizer(new HMCDataContainer[]{dataTrain,dataValid,dataTest}, false);
 

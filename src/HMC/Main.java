@@ -19,7 +19,7 @@ public class Main {
 //		 System.out.println();
 		 
 		 //normalize numeric data
-		Utility.numericalNormalizer(new HMCDataContainer[]{dataTrain,dataTest});
+		Utility.numericalNormalizer(new HMCDataContainer[]{dataTrain,dataTest}, true);
 
 		 
 //		dataTrain.hierarchical.printHierarchical();

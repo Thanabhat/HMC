@@ -46,7 +46,12 @@ public class Utility {
 		}
 	}
 	
-	public static void numericalNormalizer(HMCDataContainer[] data){
+	public static void numericalNormalizer(HMCDataContainer[] data, boolean useNegative){
+		double minus = 0.0;
+		if(useNegative){
+			minus = 0.5;
+		}
+		
 		Double[] maxNumericParameter = new Double[data[0].attributes.size()];
 		Double[] minNumericParameter = new Double[data[0].attributes.size()];
 		java.util.Arrays.fill(maxNumericParameter, -1000000.0);
@@ -75,9 +80,9 @@ public class Utility {
 						 Double value = ((NumericParameter) parameter).getValue();
 						 if(value!=null){
 							 if(maxNumericParameter[j]!=minNumericParameter[j]){
-								 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j])-0.5);
+								 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j])-minus);
 							 }else{
-								 ((NumericParameter) parameter).setValue(0.0);
+								 ((NumericParameter) parameter).setValue(0.5-minus);
 							 }
 						 }
 					 }

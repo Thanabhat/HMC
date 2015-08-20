@@ -110,14 +110,28 @@ public class Utility {
 		}
 	}
 	
-	public static void correctHierarchical(ArrayList<DataEntry> dataEntries){
-		for(DataEntry dataEntry : dataEntries){
-			correctHierarchical(dataEntry);
+	public static void correctHierarchical(ArrayList<DataEntry> dataEntries) {
+		for (DataEntry dataEntry : dataEntries) {
+			correctHierarchicalByRemove(dataEntry);
 		}
 	}
-	
-	private static void correctHierarchical(DataEntry dataEntry){
-		correctHierarchicalByRemove(dataEntry);
+
+	public static void correctHierarchicalByRemove(ArrayList<DataEntry> dataEntries) {
+		for (DataEntry dataEntry : dataEntries) {
+			correctHierarchicalByRemove(dataEntry);
+		}
+	}
+
+	public static void correctHierarchicalByAdd(ArrayList<DataEntry> dataEntries) {
+		for (DataEntry dataEntry : dataEntries) {
+			correctHierarchicalByAdd(dataEntry);
+		}
+	}
+
+	public static void correctHierarchicalByAddAndRemove(ArrayList<DataEntry> dataEntries) {
+		for (DataEntry dataEntry : dataEntries) {
+			correctHierarchicalByAddAndRemove(dataEntry);
+		}
 	}
 	
 	private static void correctHierarchicalByRemove(DataEntry dataEntry){

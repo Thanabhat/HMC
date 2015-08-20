@@ -32,30 +32,35 @@ public class ARFFConverter {
 	public static void main(String[] args) throws Exception {
 
 		final String dataset = "eisen_FUN";
+		final boolean useMLNP = true;
 
 		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".train.arff");
 		HMCDataContainer dataValid = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".valid.arff");
 		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.arff");
 		 
-		Utility.createMandatoryLeafNode(dataTrain);
-		Utility.createMandatoryLeafNode(dataValid);
-		Utility.createMandatoryLeafNode(dataTest);
+		if (useMLNP) {
+			Utility.createMandatoryLeafNode(dataTrain);
+			Utility.createMandatoryLeafNode(dataValid);
+			Utility.createMandatoryLeafNode(dataTest);
+		}
 		
 		 //normalize numeric data
 		Utility.numericalNormalizer(new HMCDataContainer[]{dataTrain,dataValid,dataTest}, false);
 
-		countClass(dataTrain.hierarchical.root);
+		countClass(dataTrain.hierarchical.root, useMLNP);
 		countAttr(dataTrain);
 		
-		printJOHMCFF(dataTrain, "datasets/datasets_FUN/"+dataset+"/"+dataset+".train.johmcff");
-		printJOHMCFF(dataValid, "datasets/datasets_FUN/"+dataset+"/"+dataset+".valid.johmcff");
-		printJOHMCFF(dataTest, "datasets/datasets_FUN/"+dataset+"/"+dataset+".test.johmcff");
+		printJOHMCFF(dataTrain, "datasets/datasets_FUN/"+dataset+"/"+dataset+".train.johmcff", useMLNP);
+		printJOHMCFF(dataValid, "datasets/datasets_FUN/"+dataset+"/"+dataset+".valid.johmcff", useMLNP);
+		printJOHMCFF(dataTest, "datasets/datasets_FUN/"+dataset+"/"+dataset+".test.johmcff", useMLNP);
 	}
 	
-	private static void countClass(HierarchicalNode node){
+	private static void countClass(HierarchicalNode node, boolean useMLNP) {
 		for (HierarchicalNode child : node.children) {
-			classCount++;
-			countClass(child);
+			if (!useMLNP || child.isLeaf()) {
+				classCount++;
+			}
+			countClass(child, useMLNP);
 		}
 	}
 	
@@ -69,18 +74,20 @@ public class ARFFConverter {
 		}
 	}
 	
-	private static void printClass(HierarchicalNode node, PrintWriter writer){
+	private static void printClass(HierarchicalNode node, PrintWriter writer, boolean useMLNP) {
 		for (HierarchicalNode child : node.children) {
-			writer.println(child.getFullId());
-			printClass(child, writer);
+			if (!useMLNP || child.isLeaf()) {
+				writer.println(child.getFullId());
+			}
+			printClass(child, writer, useMLNP);
 		}
 	}
 	
-	private static void printJOHMCFF(HMCDataContainer dataContainer, String filepath) throws FileNotFoundException, UnsupportedEncodingException{
+	private static void printJOHMCFF(HMCDataContainer dataContainer, String filepath, boolean useMLNP) throws FileNotFoundException, UnsupportedEncodingException{
 		PrintWriter writer = new PrintWriter(filepath, "UTF-8");
 		
 		writer.println(classCount);
-		printClass(dataContainer.hierarchical.root, writer);
+		printClass(dataContainer.hierarchical.root, writer, useMLNP);
 		
 		writer.println(dataContainer.dataEntries.size()+" "+attrCount);
 		for(DataEntry dataEntry:dataContainer.dataEntries){
@@ -108,7 +115,14 @@ public class ARFFConverter {
 						}
 					}
 				}else if(param instanceof HierarchicalParameter){
-					ArrayList<HierarchicalNode> nodeList = ((HierarchicalParameter)param).getValue();
+					ArrayList<HierarchicalNode> nodeList = ((HierarchicalParameter) param).getValue();
+					if (useMLNP) {
+						for (int i = nodeList.size() - 1; i >= 0; i--) {
+							if (!nodeList.get(i).isLeaf()) {
+								nodeList.remove(i);
+							}
+						}
+					}
 					String[] buf = new String[nodeList.size()];
 					for(int i=0;i<nodeList.size();i++){
 						buf[i]=nodeList.get(i).getFullId();

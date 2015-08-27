@@ -36,8 +36,10 @@ public class Hierarchical extends Attribute {
 
 	public void addNode(String nodePath) {
 		HierarchicalNode node = addNode(root, nodePath);
-		node.setFullId(nodePath);
-		hierarchicalMapping.put(nodePath, node);
+		if(node != root){
+			node.setFullId(nodePath);
+			hierarchicalMapping.put(nodePath, node);
+		}
 	}
 
 	public HierarchicalNode addNode(HierarchicalNode node, String nodePath) {
@@ -46,6 +48,8 @@ public class Hierarchical extends Attribute {
 			if (child.id.equals(splitedNodePath[0])) {
 				if (splitedNodePath.length > 1) {
 					return addNode(child, splitedNodePath[1]);
+				} else {
+					return root;
 				}
 			}
 		}

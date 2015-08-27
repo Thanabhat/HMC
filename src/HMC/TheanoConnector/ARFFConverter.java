@@ -31,12 +31,11 @@ public class ARFFConverter {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		final String dataset = "eisen_FUN";
-		final boolean useMLNP = true;
-
-		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".train.arff");
-		HMCDataContainer dataValid = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".valid.arff");
-		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.arff");
+		final String dataset = "imclef07d";
+		final boolean useMLNP = false;
+		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/"+dataset+"/"+dataset+".train.arff");
+		HMCDataContainer dataValid = ARFFReader.readFile("datasets/"+dataset+"/"+dataset+".valid.arff");
+		HMCDataContainer dataTest = ARFFReader.readFile("datasets/"+dataset+"/"+dataset+".test.arff");
 		 
 		if (useMLNP) {
 			Utility.createMandatoryLeafNode(dataTrain);
@@ -52,9 +51,9 @@ public class ARFFConverter {
 		countClass(dataTrain.hierarchical.root, useMLNP);
 		countAttr(dataTrain);
 		
-		printJOHMCFF(dataTrain, "datasets/datasets_FUN/"+dataset+"/"+dataset+".train.johmcff", useMLNP);
-		printJOHMCFF(dataValid, "datasets/datasets_FUN/"+dataset+"/"+dataset+".valid.johmcff", useMLNP);
-		printJOHMCFF(dataTest, "datasets/datasets_FUN/"+dataset+"/"+dataset+".test.johmcff", useMLNP);
+		printJOHMCFF(dataTrain, "datasets/"+dataset+"/"+dataset+".train.johmcff", useMLNP);
+		printJOHMCFF(dataValid, "datasets/"+dataset+"/"+dataset+".valid.johmcff", useMLNP);
+		printJOHMCFF(dataTest, "datasets/"+dataset+"/"+dataset+".test.johmcff", useMLNP);
 	}
 	
 	private static void countClass(HierarchicalNode node, boolean useMLNP) {

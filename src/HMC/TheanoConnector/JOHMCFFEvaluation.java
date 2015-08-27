@@ -14,19 +14,18 @@ public class JOHMCFFEvaluation {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		final String dataset = "eisen_FUN";
-		final boolean useMLNP = true;
+		final String dataset = "imclef07d";
+		final boolean useMLNP = false;
 
-		HMCDataContainer dataTest = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.arff");
+		HMCDataContainer dataTest = ARFFReader.readFile("datasets/"+dataset+"/"+dataset+".test.arff");
 //		System.out.println(Utility.isMandatoryLeafNode(dataTest.hierarchical, dataTest.dataEntries));		
 
 		if (useMLNP) {
 			Utility.createMandatoryLeafNode(dataTest);
 		}
 		
-		HMCDataContainer joPrediction = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.pred.johmcff");
-//		HMCDataContainer joPrediction = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.pred.mlp.johmcff");
-//		HMCDataContainer joPrediction = ARFFReader.readFile("datasets/datasets_FUN/"+dataset+"/"+dataset+".test.pred.mlpzero.johmcff");
+		HMCDataContainer joPrediction = ARFFReader.readFile("datasets/"+dataset+"/"+dataset+".test.pred.johmcff");
+		
 		double bestT = 0.1, bestF1 = 0.0;
 		for(double t = 0.1;t<0.4;t+=0.01){
 //			System.out.println("================================");

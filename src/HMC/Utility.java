@@ -33,7 +33,11 @@ public class Utility {
 	
 	public static void createMandatoryLeafNode(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries) {
 		for (int i = dataEntries.size() - 1; i >= 0; i--) {
-			if (!isMandatoryLeafNode(hierarchical, dataEntries.get(i))) {
+			DataEntry dataEntry = dataEntries.get(i);
+			if (!isMandatoryLeafNode(hierarchical, dataEntry)) {
+				for(HierarchicalNode node: dataEntry.label){
+					node.removeMember(dataEntry);
+				}
 				dataEntries.remove(i);
 			}
 		}

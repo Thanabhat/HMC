@@ -44,6 +44,8 @@ public class ARFFConverter {
 			Utility.createMandatoryLeafNode(dataTest);
 		}
 		
+		dataTrain.hierarchical.printHierarchical();
+		
 		 //normalize numeric data
 		Utility.numericalNormalizer(new HMCDataContainer[]{dataTrain,dataValid,dataTest}, false);
 

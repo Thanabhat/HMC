@@ -46,7 +46,7 @@ public class ARFFConverter {
 		dataTrain.hierarchical.printHierarchical();
 		
 		 //normalize numeric data
-		Utility.numericalNormalizer(new HMCDataContainer[]{dataTrain,dataValid,dataTest}, false);
+		Utility.numericalNormalizer(new HMCDataContainer[]{dataTrain,dataValid,dataTest}, false, 1.0);
 
 		countClass(dataTrain.hierarchical.root, useMLNP);
 		countAttr(dataTrain);

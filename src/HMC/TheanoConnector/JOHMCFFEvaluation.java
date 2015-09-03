@@ -50,7 +50,7 @@ public class JOHMCFFEvaluation {
 			System.out.println("treshold = "+t+", precision = "+eval[0]+", recall = "+eval[1]+", f1 = "+eval[2]);
 		}
 
-		dataTest.hierarchical.clearAllPredictedMember();
+		Utility.clearPrediction(dataTest);
 		Utility.assignClusPredictionToContainer(dataTest, joPrediction, bestT);
 		if (useMLNP) {
 			HMC.Utility.correctHierarchicalByAdd(dataTest.dataEntries);

@@ -1,1 +1,0 @@
-Measure-Command {java -jar ..\..\..\libs\Clus.jar church_FUN.s}

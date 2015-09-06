@@ -7,11 +7,11 @@ import HMC.Container.Data.DataEntry;
 
 public class ELb {
 
-	public static void Evaluate(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries) {
-		Evaluate(hierarchical, dataEntries, true);
+	public static Double[] Evaluate(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries) {
+		return Evaluate(hierarchical, dataEntries, true);
 	}
 
-	public static void Evaluate(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries, boolean printDetailResult) {
+	public static Double[] Evaluate(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries, boolean printDetailResult) {
 		// Double[] lb = LbMacro.Evaluate(hierarchical, printDetailResult);
 		Double[] lb = LbMicro.Evaluate(hierarchical, printDetailResult);
 		Double[] eb = Eb.Evaluate(dataEntries, printDetailResult);
@@ -26,10 +26,13 @@ public class ELb {
 		if (eb[2] + lb[2] > 0) {
 			f1 = (2.0 * eb[2] * lb[2]) / (eb[2] + lb[2]);
 		}
-		System.out.println("Example-label based");
-		System.out.println("Precision: " + precision);
-		System.out.println("Recall: " + recall);
-		System.out.println("F1: " + f1);
-		System.out.println();
+		if(printDetailResult){
+			System.out.println("Example-label based");
+			System.out.println("Precision: " + precision);
+			System.out.println("Recall: " + recall);
+			System.out.println("F1: " + f1);
+			System.out.println();
+		}
+		return new Double[]{precision,recall,f1};
 	}
 }

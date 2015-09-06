@@ -81,6 +81,10 @@ public class HierarchicalNode {
 		return member.contains(dataEntry);
 	}
 	
+	public boolean removeMember(DataEntry dataEntry){
+		return member.remove(dataEntry);
+	}
+	
 	public void addPredictedMember(DataEntry dataEntry){
 		if(!this.hasPredictedMember(dataEntry)){
 			predictedMember.add(dataEntry);

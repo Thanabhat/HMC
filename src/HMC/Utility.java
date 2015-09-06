@@ -14,14 +14,37 @@ import HMC.Container.Data.NumericParameter;
 public class Utility {
 	public static boolean isMandatoryLeafNode(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries){
 		for(DataEntry dataEntry: dataEntries){
-			for(HierarchicalNode node:dataEntry.label){
-				if(!node.isLeaf()){
-					System.out.println(node.getFullId());
-					return false;
-				}
+			if(!isMandatoryLeafNode(hierarchical, dataEntry)){
+				return false;
 			}
 		}
 		return true;
+	}
+
+	public static boolean isMandatoryLeafNode(Hierarchical hierarchical, DataEntry dataEntry) {
+		for (HierarchicalNode node : dataEntry.getRawLabel()) {
+			if (!node.isLeaf()) {
+//				System.out.println(node.getFullId());
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static void createMandatoryLeafNode(Hierarchical hierarchical, ArrayList<DataEntry> dataEntries) {
+		for (int i = dataEntries.size() - 1; i >= 0; i--) {
+			DataEntry dataEntry = dataEntries.get(i);
+			if (!isMandatoryLeafNode(hierarchical, dataEntry)) {
+				for(HierarchicalNode node: dataEntry.label){
+					node.removeMember(dataEntry);
+				}
+				dataEntries.remove(i);
+			}
+		}
+	}
+	
+	public static void createMandatoryLeafNode(HMCDataContainer hmcDataContainer) {
+		createMandatoryLeafNode(hmcDataContainer.hierarchical, hmcDataContainer.dataEntries);
 	}
 	
 	/*
@@ -46,7 +69,7 @@ public class Utility {
 		}
 	}
 	
-	public static void numericalNormalizer(HMCDataContainer[] data){
+	public static void numericalNormalizer(HMCDataContainer[] data, boolean useNegative, double range){
 		Double[] maxNumericParameter = new Double[data[0].attributes.size()];
 		Double[] minNumericParameter = new Double[data[0].attributes.size()];
 		java.util.Arrays.fill(maxNumericParameter, -1000000.0);
@@ -75,9 +98,17 @@ public class Utility {
 						 Double value = ((NumericParameter) parameter).getValue();
 						 if(value!=null){
 							 if(maxNumericParameter[j]!=minNumericParameter[j]){
-								 ((NumericParameter) parameter).setValue((value-minNumericParameter[j])/(maxNumericParameter[j]-minNumericParameter[j])-0.5);
+								Double newVal = (value - minNumericParameter[j]) / (maxNumericParameter[j] - minNumericParameter[j]) * range;
+								if (useNegative) {
+									newVal -= range / 2.0;
+								}
+								((NumericParameter) parameter).setValue(newVal);
 							 }else{
-								 ((NumericParameter) parameter).setValue(0.0);
+								Double newVal = 0.5 * range;
+								if (useNegative) {
+									newVal -= range / 2.0;
+								}
+								((NumericParameter) parameter).setValue(newVal);
 							 }
 						 }
 					 }
@@ -86,14 +117,28 @@ public class Utility {
 		}
 	}
 	
-	public static void correctHierarchical(ArrayList<DataEntry> dataEntries){
-		for(DataEntry dataEntry : dataEntries){
-			correctHierarchical(dataEntry);
+	public static void correctHierarchical(ArrayList<DataEntry> dataEntries) {
+		for (DataEntry dataEntry : dataEntries) {
+			correctHierarchicalByRemove(dataEntry);
 		}
 	}
-	
-	private static void correctHierarchical(DataEntry dataEntry){
-		correctHierarchicalByRemove(dataEntry);
+
+	public static void correctHierarchicalByRemove(ArrayList<DataEntry> dataEntries) {
+		for (DataEntry dataEntry : dataEntries) {
+			correctHierarchicalByRemove(dataEntry);
+		}
+	}
+
+	public static void correctHierarchicalByAdd(ArrayList<DataEntry> dataEntries) {
+		for (DataEntry dataEntry : dataEntries) {
+			correctHierarchicalByAdd(dataEntry);
+		}
+	}
+
+	public static void correctHierarchicalByAddAndRemove(ArrayList<DataEntry> dataEntries) {
+		for (DataEntry dataEntry : dataEntries) {
+			correctHierarchicalByAddAndRemove(dataEntry);
+		}
 	}
 	
 	private static void correctHierarchicalByRemove(DataEntry dataEntry){
@@ -160,6 +205,13 @@ public class Utility {
 		for(HierarchicalNode node:nodeToAdd){
 			dataEntry.addPredictedLabel(node);
 			node.addPredictedMember(dataEntry);
+		}
+	}
+	
+	public static void clearPrediction(HMCDataContainer hmcDataContainer) {
+		hmcDataContainer.hierarchical.clearAllPredictedMember();
+		for (DataEntry dataEntry : hmcDataContainer.dataEntries) {
+			dataEntry.clearPredictedLabel();
 		}
 	}
 }

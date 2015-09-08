@@ -106,7 +106,7 @@ public class LocalNN {
 		for (double threshold = 0.00; threshold <= 1.0001; threshold += 0.04) {
 			Utility.clearPrediction(dataTest);
 			for (int i = 0; i < hierarchySize; i++) {
-				AssignResult(dataTest, hierarchicalMapping.get(i), predictedOutputTest.get(i), dataTest.hierarchical, threshold);
+				assignResult(dataTest, hierarchicalMapping.get(i), predictedOutputTest.get(i), dataTest.hierarchical, threshold);
 			}
 			HMC.Utility.correctHierarchicalByRemove(dataTest.dataEntries);
 			HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
@@ -123,7 +123,7 @@ public class LocalNN {
 		// Print best result
 		Utility.clearPrediction(dataTest);
 		for (int i = 0; i < hierarchySize; i++) {
-			AssignResult(dataTest, hierarchicalMapping.get(i), predictedOutputTest.get(i), dataTest.hierarchical, bestThreshold);
+			assignResult(dataTest, hierarchicalMapping.get(i), predictedOutputTest.get(i), dataTest.hierarchical, bestThreshold);
 		}
 		HMC.Utility.correctHierarchicalByRemove(dataTest.dataEntries);
 		// HMC.Evaluator.Utility.printResult(dataTest.dataEntries);
@@ -229,7 +229,7 @@ public class LocalNN {
 		return res;
 	}
 
-	private static void AssignResult(HMCDataContainer dataContainer, ArrayList<String> classMapping, double[][] results, Hierarchical hierarchical, double threshold) {
+	private static void assignResult(HMCDataContainer dataContainer, ArrayList<String> classMapping, double[][] results, Hierarchical hierarchical, double threshold) {
 		for (int i = 0; i < dataContainer.dataEntries.size(); i++) {
 			for (int j = 0; j < results[i].length; j++) {
 				if (results[i][j] > threshold) {

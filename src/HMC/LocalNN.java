@@ -60,8 +60,16 @@ public class LocalNN {
 			double[][] newOutputTrain = getOutputData(dataTrain, hierarchicalMapping.get(i), nClassList[i]);
 			outputTrain.add(newOutputTrain);
 
+			// double[][] trainingData = i == 0 ? inputTrain : predictedOutputTrain.get(i - 1);
+			double[][] trainingData;
+			if (i == 0) {
+				trainingData = inputTrain;
+			} else {
+				trainingData = Utility.concat(predictedOutputTrain.get(i - 1), inputTrain);
+			}
+
 			BasicNetwork network = new BasicNetwork();
-			int nInput = i == 0 ? nFeature : nClassList[i - 1];
+			int nInput = trainingData[0].length;
 			network.addLayer(new BasicLayer(null, false, nInput));
 			network.addLayer(new BasicLayer(new ActivationSigmoid(), true, (int) (nInput * HIDEEN_NEURAL_FRACTION[i])));
 			network.addLayer(new BasicLayer(new ActivationSigmoid(), true, nClassList[i]));
@@ -69,7 +77,6 @@ public class LocalNN {
 			network.reset();
 			networkList.add(network);
 
-			double[][] trainingData = i == 0 ? inputTrain : predictedOutputTrain.get(i - 1);
 			MLDataSet trainingSet = new BasicMLDataSet(trainingData, newOutputTrain);
 			// final ResilientPropagation train = new ResilientPropagation(network, trainingSet);
 			final Backpropagation train = new Backpropagation(network, trainingSet);
@@ -92,7 +99,13 @@ public class LocalNN {
 		// Test
 		for (int i = 0; i < hierarchySize; i++) {
 			BasicNetwork network = networkList.get(i);
-			double[][] testingData = i == 0 ? inputTest : predictedOutputTest.get(i - 1);
+			// double[][] testingData = i == 0 ? inputTest : predictedOutputTest.get(i - 1);
+			double[][] testingData;
+			if (i == 0) {
+				testingData = inputTest;
+			} else {
+				testingData = Utility.concat(predictedOutputTest.get(i - 1), inputTest);
+			}
 
 			double[][] newPredictedOutputTest = new double[dataTest.dataEntries.size()][nClassList[i]];
 			for (int j = 0; j < dataTest.dataEntries.size(); j++) {

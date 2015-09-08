@@ -225,4 +225,13 @@ public class Utility {
 		}
 		return result;
 	}
+	
+	public static double[][] concat(double[][] array1, double[][] array2) {
+		assert (array1.length == array2.length);
+		double[][] result = new double[array1.length][];
+		for (int i = 0; i < array1.length; i++) {
+			result[i] = concat(array1[i], array2[i]);
+		}
+		return result;
+	}
 }

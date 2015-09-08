@@ -214,4 +214,15 @@ public class Utility {
 			dataEntry.clearPredictedLabel();
 		}
 	}
+	
+	public static double[] concat(double[] array1, double[] array2) {
+		double[] result = new double[array1.length + array2.length];
+		for (int i = 0; i < array1.length; i++) {
+			result[i] = array1[i];
+		}
+		for (int i = 0; i < array2.length; i++) {
+			result[i + array1.length] = array2[i];
+		}
+		return result;
+	}
 }

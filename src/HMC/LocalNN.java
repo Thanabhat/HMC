@@ -23,6 +23,7 @@ import HMC.Container.Data.NominalParameter;
 import HMC.Container.Data.NumericParameter;
 import HMC.Container.Data.Parameter;
 import HMC.Evaluator.ELb;
+import HMC.Evaluator.LbMicro;
 import HMC.Reader.ARFFReader;
 
 public class LocalNN {
@@ -70,7 +71,7 @@ public class LocalNN {
 
 			double[][] trainingData = i == 0 ? inputTrain : predictedOutputTrain.get(i - 1);
 			MLDataSet trainingSet = new BasicMLDataSet(trainingData, newOutputTrain);
-//			final ResilientPropagation train = new ResilientPropagation(network, trainingSet);
+			// final ResilientPropagation train = new ResilientPropagation(network, trainingSet);
 			final Backpropagation train = new Backpropagation(network, trainingSet);
 			int epoch = 1;
 			do {
@@ -102,7 +103,7 @@ public class LocalNN {
 
 		// Evaluate result
 		double bestThreshold = 0.05, bestF1 = 0.0;
-		for (double threshold = 0.05; threshold <= 0.305; threshold += 0.005) {
+		for (double threshold = 0.00; threshold <= 1.0001; threshold += 0.04) {
 			Utility.clearPrediction(dataTest);
 			for (int i = 0; i < hierarchySize; i++) {
 				AssignResult(dataTest, hierarchicalMapping.get(i), predictedOutputTest.get(i), dataTest.hierarchical, threshold);
@@ -115,7 +116,9 @@ public class LocalNN {
 				bestF1 = f1;
 				bestThreshold = threshold;
 			}
-			System.out.println("treshold = " + threshold + ", precision = " + eval[0] + ", recall = " + eval[1] + ", f1 = " + eval[2]);
+			// System.out.println("treshold = " + threshold + ", precision = " + eval[0] + ", recall = " + eval[1] + ", f1 = " + eval[2]);
+			eval = LbMicro.Evaluate(dataTest.hierarchical, false);
+			System.out.println(threshold + "\t" + eval[0] + "\t" + eval[1] + "\t" + eval[2]);
 		}
 		// Print best result
 		Utility.clearPrediction(dataTest);

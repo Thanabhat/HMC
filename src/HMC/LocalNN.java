@@ -28,6 +28,11 @@ import HMC.Reader.ARFFReader;
 
 public class LocalNN {
 
+	/**
+	 * Cerri = Cerri
+	 * Jo1 = Cerri and add features on each NN input
+	 * Jo2 = use only features on each NN input
+	 */
 	static enum Method {Cerri, Jo1, Jo2};
 	
 	public static void main(String[] args) throws IOException {
@@ -76,6 +81,8 @@ public class LocalNN {
 						trainingData = Utility.concat(predictedOutputTrain.get(i - 1), inputTrain);
 					}
 					break;
+				case Jo2:
+					trainingData = inputTrain;
 			}
 
 			BasicNetwork network = new BasicNetwork();
@@ -96,7 +103,7 @@ public class LocalNN {
 				// System.out.println("Epoch #" + epoch + " Error:" + train.getError());
 				epoch++;
 			} while (train.getError() > 0.01 && epoch < MAX_EPOCH);
-			System.out.println("Level " + (i + 1) + " Epoch #" + epoch + " Error:" + train.getError());
+			System.out.println("Level " + (i + 1) + " Epoch #" + epoch + " Error: " + train.getError());
 			train.finishTraining();
 
 			double[][] newPredictedOutputTrain = new double[dataTrain.dataEntries.size()][nClassList[i]];
@@ -122,6 +129,8 @@ public class LocalNN {
 						testingData = Utility.concat(predictedOutputTest.get(i - 1), inputTest);
 					}
 					break;
+				case Jo2:
+					testingData = inputTest;
 			}
 
 			double[][] newPredictedOutputTest = new double[dataTest.dataEntries.size()][nClassList[i]];

@@ -102,7 +102,7 @@ public class LocalNN {
 				train.iteration();
 				// System.out.println("Epoch #" + epoch + " Error:" + train.getError());
 				epoch++;
-			} while (train.getError() > 0.01 && epoch < MAX_EPOCH);
+			} while (train.getError() > 0.001 && epoch < MAX_EPOCH);
 			System.out.println("Level " + (i + 1) + " Epoch #" + epoch + " Error: " + train.getError());
 			train.finishTraining();
 

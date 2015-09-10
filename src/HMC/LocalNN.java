@@ -28,12 +28,15 @@ import HMC.Reader.ARFFReader;
 
 public class LocalNN {
 
+	static enum Method {Cerri, Jo1, Jo2};
+	
 	public static void main(String[] args) throws IOException {
 		final String dataset = "eisen_FUN";
 		final boolean NEGATIVE_FEATURE = true;
 		final double FEATURE_RANGE = 2.0;
 		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.6, 0.5, 0.4, 0.3, 0.2, 0.1 };
 		final int MAX_EPOCH = 1000;
+		final Method METHOD = Method.Jo1;
 
 		// Prepare
 		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/" + dataset + "/" + dataset + ".train.arff");
@@ -60,12 +63,19 @@ public class LocalNN {
 			double[][] newOutputTrain = getOutputData(dataTrain, hierarchicalMapping.get(i), nClassList[i]);
 			outputTrain.add(newOutputTrain);
 
-			// double[][] trainingData = i == 0 ? inputTrain : predictedOutputTrain.get(i - 1);
 			double[][] trainingData;
-			if (i == 0) {
-				trainingData = inputTrain;
-			} else {
-				trainingData = Utility.concat(predictedOutputTrain.get(i - 1), inputTrain);
+			switch (METHOD) {
+				case Cerri:
+					trainingData = i == 0 ? inputTrain : predictedOutputTrain.get(i - 1);
+					break;
+				case Jo1:
+				default:
+					if (i == 0) {
+						trainingData = inputTrain;
+					} else {
+						trainingData = Utility.concat(predictedOutputTrain.get(i - 1), inputTrain);
+					}
+					break;
 			}
 
 			BasicNetwork network = new BasicNetwork();
@@ -99,12 +109,19 @@ public class LocalNN {
 		// Test
 		for (int i = 0; i < hierarchySize; i++) {
 			BasicNetwork network = networkList.get(i);
-			// double[][] testingData = i == 0 ? inputTest : predictedOutputTest.get(i - 1);
 			double[][] testingData;
-			if (i == 0) {
-				testingData = inputTest;
-			} else {
-				testingData = Utility.concat(predictedOutputTest.get(i - 1), inputTest);
+			switch (METHOD) {
+				case Cerri:
+					testingData = i == 0 ? inputTest : predictedOutputTest.get(i - 1);
+					break;
+				case Jo1:
+				default:
+					if (i == 0) {
+						testingData = inputTest;
+					} else {
+						testingData = Utility.concat(predictedOutputTest.get(i - 1), inputTest);
+					}
+					break;
 			}
 
 			double[][] newPredictedOutputTest = new double[dataTest.dataEntries.size()][nClassList[i]];

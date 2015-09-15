@@ -24,6 +24,7 @@ import HMC.Container.Data.NumericParameter;
 import HMC.Container.Data.Parameter;
 import HMC.Evaluator.AUPRC;
 import HMC.Evaluator.ELb;
+import HMC.Evaluator.HRSVM;
 import HMC.Evaluator.LbMicro;
 import HMC.Reader.ARFFReader;
 
@@ -185,7 +186,10 @@ public class LocalNN {
 		// Print result AUPRC
 		System.out.println("================================");
 		System.out.println("AUPRC = " + AUPRC.evaluate(sortedPRPair));
-
+		
+		// Export to HRSVM evaluator file format
+		HRSVM.exportToHRSVM(dataTest, "datasets/" + dataset + "/" + dataset);
+		
 		// Shutdown
 		Encog.getInstance().shutdown();
 	}

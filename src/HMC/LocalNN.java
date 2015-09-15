@@ -22,18 +22,28 @@ import HMC.Container.Data.DataEntry;
 import HMC.Container.Data.NominalParameter;
 import HMC.Container.Data.NumericParameter;
 import HMC.Container.Data.Parameter;
+import HMC.Evaluator.AUPRC;
 import HMC.Evaluator.ELb;
 import HMC.Evaluator.LbMicro;
 import HMC.Reader.ARFFReader;
 
 public class LocalNN {
 
+	/**
+	 * Cerri = Cerri
+	 * Jo1 = Cerri and add features on each NN input
+	 * Jo2 = use only features on each NN input
+	 */
+	static enum Method {Cerri, Jo1, Jo2};
+	static double eps = 1E-7;
+	
 	public static void main(String[] args) throws IOException {
 		final String dataset = "eisen_FUN";
 		final boolean NEGATIVE_FEATURE = true;
 		final double FEATURE_RANGE = 2.0;
 		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.6, 0.5, 0.4, 0.3, 0.2, 0.1 };
 		final int MAX_EPOCH = 1000;
+		final Method METHOD = Method.Jo1;
 
 		// Prepare
 		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/" + dataset + "/" + dataset + ".train.arff");
@@ -60,8 +70,25 @@ public class LocalNN {
 			double[][] newOutputTrain = getOutputData(dataTrain, hierarchicalMapping.get(i), nClassList[i]);
 			outputTrain.add(newOutputTrain);
 
+			double[][] trainingData;
+			switch (METHOD) {
+				case Cerri:
+					trainingData = i == 0 ? inputTrain : predictedOutputTrain.get(i - 1);
+					break;
+				case Jo1:
+				default:
+					if (i == 0) {
+						trainingData = inputTrain;
+					} else {
+						trainingData = Utility.concat(predictedOutputTrain.get(i - 1), inputTrain);
+					}
+					break;
+				case Jo2:
+					trainingData = inputTrain;
+			}
+
 			BasicNetwork network = new BasicNetwork();
-			int nInput = i == 0 ? nFeature : nClassList[i - 1];
+			int nInput = trainingData[0].length;
 			network.addLayer(new BasicLayer(null, false, nInput));
 			network.addLayer(new BasicLayer(new ActivationSigmoid(), true, (int) (nInput * HIDEEN_NEURAL_FRACTION[i])));
 			network.addLayer(new BasicLayer(new ActivationSigmoid(), true, nClassList[i]));
@@ -69,7 +96,6 @@ public class LocalNN {
 			network.reset();
 			networkList.add(network);
 
-			double[][] trainingData = i == 0 ? inputTrain : predictedOutputTrain.get(i - 1);
 			MLDataSet trainingSet = new BasicMLDataSet(trainingData, newOutputTrain);
 			// final ResilientPropagation train = new ResilientPropagation(network, trainingSet);
 			final Backpropagation train = new Backpropagation(network, trainingSet);
@@ -78,8 +104,8 @@ public class LocalNN {
 				train.iteration();
 				// System.out.println("Epoch #" + epoch + " Error:" + train.getError());
 				epoch++;
-			} while (train.getError() > 0.01 && epoch < MAX_EPOCH);
-			System.out.println("Level " + (i + 1) + " Epoch #" + epoch + " Error:" + train.getError());
+			} while (train.getError() > 0.001 && epoch < MAX_EPOCH);
+			System.out.println("Level " + (i + 1) + " Epoch #" + epoch + " Error: " + train.getError());
 			train.finishTraining();
 
 			double[][] newPredictedOutputTrain = new double[dataTrain.dataEntries.size()][nClassList[i]];
@@ -92,7 +118,22 @@ public class LocalNN {
 		// Test
 		for (int i = 0; i < hierarchySize; i++) {
 			BasicNetwork network = networkList.get(i);
-			double[][] testingData = i == 0 ? inputTest : predictedOutputTest.get(i - 1);
+			double[][] testingData;
+			switch (METHOD) {
+				case Cerri:
+					testingData = i == 0 ? inputTest : predictedOutputTest.get(i - 1);
+					break;
+				case Jo1:
+				default:
+					if (i == 0) {
+						testingData = inputTest;
+					} else {
+						testingData = Utility.concat(predictedOutputTest.get(i - 1), inputTest);
+					}
+					break;
+				case Jo2:
+					testingData = inputTest;
+			}
 
 			double[][] newPredictedOutputTest = new double[dataTest.dataEntries.size()][nClassList[i]];
 			for (int j = 0; j < dataTest.dataEntries.size(); j++) {
@@ -102,8 +143,10 @@ public class LocalNN {
 		}
 
 		// Evaluate result
+		ArrayList<double[]> sortedPRPair = new ArrayList<double[]>();
 		double bestThreshold = 0.05, bestF1 = 0.0;
-		for (double threshold = 0.00; threshold <= 1.0001; threshold += 0.04) {
+		int curI = 0;
+		for (double threshold = 0.00; threshold <= 1.0 + eps; threshold += 0.02, curI++) {
 			Utility.clearPrediction(dataTest);
 			for (int i = 0; i < hierarchySize; i++) {
 				assignResult(dataTest, hierarchicalMapping.get(i), predictedOutputTest.get(i), dataTest.hierarchical, threshold);
@@ -118,9 +161,15 @@ public class LocalNN {
 			}
 			// System.out.println("treshold = " + threshold + ", precision = " + eval[0] + ", recall = " + eval[1] + ", f1 = " + eval[2]);
 			eval = LbMicro.Evaluate(dataTest.hierarchical, false);
-			System.out.println(threshold + "\t" + eval[0] + "\t" + eval[1] + "\t" + eval[2]);
+			if (!(eval[1] < eps && eval[2] < eps)) { //remove (0.0,0.0) pair
+				sortedPRPair.add(new double[] { eval[0], eval[1] });
+			}
+//			System.out.println(threshold + "\t" + eval[0] + "\t" + eval[1] + "\t" + eval[2]);
+			if (curI % 2 == 0) {
+				System.out.println(eval[0] + "\t" + eval[1]);
+			}
 		}
-		// Print best result
+		// Print best result Pr Re F1
 		Utility.clearPrediction(dataTest);
 		for (int i = 0; i < hierarchySize; i++) {
 			assignResult(dataTest, hierarchicalMapping.get(i), predictedOutputTest.get(i), dataTest.hierarchical, bestThreshold);
@@ -132,6 +181,10 @@ public class LocalNN {
 		System.out.println();
 		HMC.Evaluator.Utility.PrepareParameter(dataTest.hierarchical);
 		ELb.Evaluate(dataTest.hierarchical, dataTest.dataEntries);
+
+		// Print result AUPRC
+		System.out.println("================================");
+		System.out.println("AUPRC = " + AUPRC.evaluate(sortedPRPair));
 
 		// Shutdown
 		Encog.getInstance().shutdown();

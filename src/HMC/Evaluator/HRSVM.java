@@ -18,7 +18,11 @@ public class HRSVM {
 	private static void exportHierarchicalFile(HMCDataContainer hmcDataContainer, String filePath) throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(filePath, "UTF-8");
 		for (HierarchicalNode node : hmcDataContainer.hierarchical.root.children) {
-			printHierarchical(writer, node);
+			if (node.children.size() == 0) {
+				writer.println(node.getFullId() + " DUMMY");
+			} else {
+				printHierarchical(writer, node);
+			}
 		}
 		writer.close();
 	}

@@ -24,6 +24,7 @@ import HMC.Container.Data.NumericParameter;
 import HMC.Container.Data.Parameter;
 import HMC.Evaluator.AUPRC;
 import HMC.Evaluator.ELb;
+import HMC.Evaluator.HRSVM;
 import HMC.Evaluator.LbMicro;
 import HMC.Reader.ARFFReader;
 
@@ -38,10 +39,13 @@ public class LocalNN {
 	static double eps = 1E-7;
 	
 	public static void main(String[] args) throws IOException {
-		final String dataset = "eisen_FUN";
+		final String dataset = "enron";
 		final boolean NEGATIVE_FEATURE = true;
 		final double FEATURE_RANGE = 2.0;
-		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.6, 0.5, 0.4, 0.3, 0.2, 0.1 };
+//		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.6, 0.5, 0.4, 0.3, 0.2, 0.1 };
+		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.2, 0.2, 0.2, 0.2, 0.2, 0.2 };
+//		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.8, 0.8, 0.8, 0.8, 0.8, 0.8 };
+//		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
 		final int MAX_EPOCH = 1000;
 		final Method METHOD = Method.Jo1;
 
@@ -99,6 +103,8 @@ public class LocalNN {
 			MLDataSet trainingSet = new BasicMLDataSet(trainingData, newOutputTrain);
 			// final ResilientPropagation train = new ResilientPropagation(network, trainingSet);
 			final Backpropagation train = new Backpropagation(network, trainingSet);
+//			System.out.println(train.getLearningRate());
+//			train.setLearningRate(0.001);
 			int epoch = 1;
 			do {
 				train.iteration();
@@ -185,7 +191,10 @@ public class LocalNN {
 		// Print result AUPRC
 		System.out.println("================================");
 		System.out.println("AUPRC = " + AUPRC.evaluate(sortedPRPair));
-
+		
+		// Export to HRSVM evaluator file format
+		HRSVM.exportToHRSVM(dataTest, "datasets/" + dataset + "/" + dataset);
+		
 		// Shutdown
 		Encog.getInstance().shutdown();
 	}

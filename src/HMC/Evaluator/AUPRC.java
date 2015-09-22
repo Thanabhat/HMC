@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class AUPRC {
 	static double eps = 1E-7;
 
-	public static double evaluate(double[][] sortedPRPair) {
+	public static double evaluate(double[][] sortedPRPairOrig) {
+		double[][] sortedPRPair = removeDuplicateXValue(sortedPRPairOrig);
 		assert(sortedPRPair.length >= 2);
 		assert(sortedPRPair[0].length == 2);
 		int curPos = 0;
@@ -41,5 +42,16 @@ public class AUPRC {
 
 	private static double getInterpolatedValue(double x, double[] p1, double[] p2) {
 		return (p2[1] - p1[1]) / (p2[0] - p1[0]) * (x - p1[0]) + p1[1];
+	}
+
+	private static double[][] removeDuplicateXValue(double[][] sortedPair) {
+		assert(sortedPair[0].length == 2);
+		ArrayList<double[]> res = new ArrayList<double[]>();
+		for (int i = 0; i < sortedPair.length; i++) {
+			if (i == 0 || Math.abs(sortedPair[i][0] - sortedPair[i - 1][0]) > eps) {
+				res.add(new double[] { sortedPair[i][0], sortedPair[i][1] });
+			}
+		}
+		return res.toArray(new double[res.size()][]);
 	}
 }

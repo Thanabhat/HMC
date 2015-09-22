@@ -27,6 +27,7 @@ import HMC.Evaluator.ELb;
 import HMC.Evaluator.HRSVM;
 import HMC.Evaluator.LbMicro;
 import HMC.Reader.ARFFReader;
+import thanabhat.nn.MLP;
 
 public class LocalNN {
 
@@ -36,6 +37,7 @@ public class LocalNN {
 	 * Jo2 = use only features on each NN input
 	 */
 	static enum Method {Cerri, Jo1, Jo2};
+	static enum NeuralNetworkLib {encog, thanabhat};
 	static double eps = 1E-7;
 	
 	public static void main(String[] args) throws IOException {
@@ -47,7 +49,11 @@ public class LocalNN {
 //		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.8, 0.8, 0.8, 0.8, 0.8, 0.8 };
 //		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
 		final int MAX_EPOCH = 1000;
+		final double MIN_ERROR = 0.001;
 		final Method METHOD = Method.Jo1;
+		final NeuralNetworkLib NN_Lib = NeuralNetworkLib.thanabhat;
+		final double THANABHAT_LR = 0.5;
+		final double THANABHAT_LRReg = 0.0;
 
 		// Prepare
 		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/" + dataset + "/" + dataset + ".train.arff");
@@ -66,7 +72,16 @@ public class LocalNN {
 		ArrayList<double[][]> predictedOutputTrain = new ArrayList<double[][]>();
 		ArrayList<double[][]> predictedOutputTest = new ArrayList<double[][]>();
 
-		ArrayList<BasicNetwork> networkList = new ArrayList<BasicNetwork>();
+		ArrayList<BasicNetwork> networkList = null;
+		ArrayList<MLP> networkList2 = null;
+		switch (NN_Lib) {
+			case encog:
+				networkList = new ArrayList<BasicNetwork>();
+				break;
+			case thanabhat:
+				networkList2 = new ArrayList<MLP>();
+				break;
+		}
 
 		// Train
 		for (int i = 0; i < hierarchySize; i++) {
@@ -90,40 +105,57 @@ public class LocalNN {
 				case Jo2:
 					trainingData = inputTrain;
 			}
-
-			BasicNetwork network = new BasicNetwork();
 			int nInput = trainingData[0].length;
-			network.addLayer(new BasicLayer(null, false, nInput));
-			network.addLayer(new BasicLayer(new ActivationSigmoid(), true, (int) (nInput * HIDEEN_NEURAL_FRACTION[i])));
-			network.addLayer(new BasicLayer(new ActivationSigmoid(), true, nClassList[i]));
-			network.getStructure().finalizeStructure();
-			network.reset();
-			networkList.add(network);
 
-			MLDataSet trainingSet = new BasicMLDataSet(trainingData, newOutputTrain);
-			// final ResilientPropagation train = new ResilientPropagation(network, trainingSet);
-			final Backpropagation train = new Backpropagation(network, trainingSet);
-//			System.out.println(train.getLearningRate());
-//			train.setLearningRate(0.001);
 			int epoch = 1;
-			do {
-				train.iteration();
-				// System.out.println("Epoch #" + epoch + " Error:" + train.getError());
-				epoch++;
-			} while (train.getError() > 0.001 && epoch < MAX_EPOCH);
-			System.out.println("Level " + (i + 1) + " Epoch #" + epoch + " Error: " + train.getError());
-			train.finishTraining();
-
 			double[][] newPredictedOutputTrain = new double[dataTrain.dataEntries.size()][nClassList[i]];
-			for (int j = 0; j < dataTrain.dataEntries.size(); j++) {
-				network.compute(trainingData[j], newPredictedOutputTrain[j]);
+			switch (NN_Lib) {
+				case encog:
+					BasicNetwork network = new BasicNetwork();
+					network.addLayer(new BasicLayer(null, false, nInput));
+					network.addLayer(new BasicLayer(new ActivationSigmoid(), true, (int) (nInput * HIDEEN_NEURAL_FRACTION[i])));
+					network.addLayer(new BasicLayer(new ActivationSigmoid(), true, nClassList[i]));
+					network.getStructure().finalizeStructure();
+					network.reset();
+					networkList.add(network);
+
+					MLDataSet trainingSet = new BasicMLDataSet(trainingData, newOutputTrain);
+					// final ResilientPropagation train = new ResilientPropagation(network, trainingSet);
+					final Backpropagation train = new Backpropagation(network, trainingSet);
+//					System.out.println(train.getLearningRate());
+//					train.setLearningRate(0.001);
+
+					do {
+						train.iteration();
+						 System.out.println("Epoch #" + epoch + " Error:" + train.getError());
+						epoch++;
+					} while (train.getError() > MIN_ERROR && epoch < MAX_EPOCH);
+					System.out.println("Level " + (i + 1) + " Epoch #" + epoch + " Error: " + train.getError());
+					train.finishTraining();
+
+					for (int j = 0; j < dataTrain.dataEntries.size(); j++) {
+						network.compute(trainingData[j], newPredictedOutputTrain[j]);
+					}
+					break;
+				case thanabhat:
+					MLP mlp = new MLP(nInput, nClassList[i], new int[] { (int) (nInput * HIDEEN_NEURAL_FRACTION[i]) }, null);
+					networkList2.add(mlp);
+					double trainingError;
+					do {
+						trainingError = mlp.train(trainingData, newOutputTrain, THANABHAT_LR, THANABHAT_LRReg);
+						System.out.println("Epoch #" + epoch + " Error:" + trainingError);
+						epoch++;
+					} while (trainingError > MIN_ERROR && epoch < MAX_EPOCH);
+					System.out.println("Level " + (i + 1) + " Epoch #" + epoch + " Error: " + trainingError);
+
+					mlp.predict(trainingData, newPredictedOutputTrain);
+					break;
 			}
 			predictedOutputTrain.add(newPredictedOutputTrain);
 		}
 
 		// Test
 		for (int i = 0; i < hierarchySize; i++) {
-			BasicNetwork network = networkList.get(i);
 			double[][] testingData;
 			switch (METHOD) {
 				case Cerri:
@@ -142,8 +174,17 @@ public class LocalNN {
 			}
 
 			double[][] newPredictedOutputTest = new double[dataTest.dataEntries.size()][nClassList[i]];
-			for (int j = 0; j < dataTest.dataEntries.size(); j++) {
-				network.compute(testingData[j], newPredictedOutputTest[j]);
+			switch (NN_Lib) {
+				case encog:
+					BasicNetwork network = networkList.get(i);
+					for (int j = 0; j < dataTest.dataEntries.size(); j++) {
+						network.compute(testingData[j], newPredictedOutputTest[j]);
+					}
+					break;
+				case thanabhat:
+					MLP mlp = networkList2.get(i);
+					mlp.predict(testingData, newPredictedOutputTest);
+					break;
 			}
 			predictedOutputTest.add(newPredictedOutputTest);
 		}

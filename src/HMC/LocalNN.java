@@ -41,14 +41,15 @@ public class LocalNN {
 	static double eps = 1E-7;
 	
 	public static void main(String[] args) throws IOException {
-		final String dataset = "enron";
+		final String dataset = "imclef07d";
 		final boolean NEGATIVE_FEATURE = true;
 		final double FEATURE_RANGE = 2.0;
 //		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.6, 0.5, 0.4, 0.3, 0.2, 0.1 };
-		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.2, 0.2, 0.2, 0.2, 0.2, 0.2 };
+//		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.2, 0.2, 0.2, 0.2, 0.2, 0.2 };
+		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.4, 0.4, 0.4, 0.4, 0.4, 0.4 };
 //		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.8, 0.8, 0.8, 0.8, 0.8, 0.8 };
 //		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
-		final int MAX_EPOCH = 1000;
+		final int MAX_EPOCH = 200;
 		final double MIN_ERROR = 0.001;
 		final Method METHOD = Method.Jo1;
 		final NeuralNetworkLib NN_Lib = NeuralNetworkLib.thanabhat;
@@ -143,10 +144,18 @@ public class LocalNN {
 					double trainingError;
 					do {
 						trainingError = mlp.train(trainingData, newOutputTrain, THANABHAT_LR, THANABHAT_LRReg);
-						System.out.println("Epoch #" + epoch + " Error:" + trainingError);
+//						System.out.println("Epoch #" + epoch + " Error:" + trainingError);
 						epoch++;
 					} while (trainingError > MIN_ERROR && epoch < MAX_EPOCH);
+					
+					ArrayList<String> hm = hierarchicalMapping.get(i);
+					for (int j = 0; j < hm.size(); j++) {
+						System.out.print(hm.get(j) + "\t");
+					}
+					System.out.println();
 					System.out.println("Level " + (i + 1) + " Epoch #" + epoch + " Error: " + trainingError);
+					mlp.printWeight();
+					System.out.println();
 
 					mlp.predict(trainingData, newPredictedOutputTrain);
 					break;

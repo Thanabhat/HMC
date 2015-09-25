@@ -63,7 +63,7 @@ public class LocalNN {
 		final double THANABHAT_LRReg = 0.0;
 		final boolean usePCAinFirstLevel = false;
 		final boolean usePCAinOtherLevel = true;
-		final int nPCAFeature = 40;
+		final int nPCAFeature = 20;
 
 		// Prepare Data
 		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/" + dataset + "/" + dataset + ".train.arff");
@@ -118,6 +118,7 @@ public class LocalNN {
 				break;
 		}
 
+		long timeStart = System.currentTimeMillis();
 		// Train
 		for (int i = 0; i < hierarchySize; i++) {
 			nClassList[i] = hierarchicalMapping.get(i).size();
@@ -164,12 +165,12 @@ public class LocalNN {
 //					System.out.println(train.getLearningRate());
 //					train.setLearningRate(0.001);
 
+					System.out.println("Level " + (i + 1) + " NN size: " + nInput + " " + (int) (nInput * HIDEEN_NEURAL_FRACTION[i]) + " " + nClassList[i]);
 					do {
 						train.iteration();
 //						 System.out.println("Epoch #" + epoch + " Error:" + train.getError());
 						epoch++;
 					} while (train.getError() > MIN_ERROR && epoch < MAX_EPOCH);
-					System.out.println("NN size: " + nInput + " " + (int) (nInput * HIDEEN_NEURAL_FRACTION[i]) + " " + nClassList[i]);
 					System.out.println("Level " + (i + 1) + " Epoch #" + epoch + " Error: " + train.getError());
 					train.finishTraining();
 
@@ -201,6 +202,10 @@ public class LocalNN {
 			}
 			predictedOutputTrain.add(newPredictedOutputTrain);
 		}
+		
+		long elapsedTimeMillis = System.currentTimeMillis() - timeStart;
+		System.out.println("Training Time: " + elapsedTimeMillis + " ms");
+		System.out.println();
 
 		// Test
 		for (int i = 0; i < hierarchySize; i++) {

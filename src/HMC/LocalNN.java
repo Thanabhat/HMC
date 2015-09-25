@@ -12,6 +12,12 @@ import org.encog.neural.networks.layers.BasicLayer;
 import org.encog.neural.networks.training.propagation.back.Backpropagation;
 import org.encog.neural.networks.training.propagation.resilient.ResilientPropagation;
 
+import weka.core.FastVector;
+import weka.core.Instance;
+import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.*;
+
 import HMC.Container.HMCDataContainer;
 import HMC.Container.Attribute.Attribute;
 import HMC.Container.Attribute.Hierarchical;
@@ -55,8 +61,11 @@ public class LocalNN {
 		final NeuralNetworkLib NN_Lib = NeuralNetworkLib.encog;
 		final double THANABHAT_LR = 0.5;
 		final double THANABHAT_LRReg = 0.0;
+		final boolean usePCAinFirstLevel = false;
+		final boolean usePCAinOtherLevel = true;
+		final int nPCAFeature = 40;
 
-		// Prepare
+		// Prepare Data
 		HMCDataContainer dataTrain = ARFFReader.readFile("datasets/" + dataset + "/" + dataset + ".train.arff");
 		HMCDataContainer dataTest = ARFFReader.readFile("datasets/" + dataset + "/" + dataset + ".test.arff");
 
@@ -73,6 +82,31 @@ public class LocalNN {
 		ArrayList<double[][]> predictedOutputTrain = new ArrayList<double[][]>();
 		ArrayList<double[][]> predictedOutputTest = new ArrayList<double[][]>();
 
+		// do PCA
+		double[][] inputTrainTest = new double[inputTrain.length + inputTest.length][inputTrain[0].length];
+		for (int i = 0; i < inputTrainTest.length; i++) {
+			for (int j = 0; j < inputTrainTest[i].length; j++) {
+				if (i < inputTrain.length) {
+					inputTrainTest[i][j] = inputTrain[i][j];
+				} else {
+					inputTrainTest[i][j] = inputTest[i - inputTrain.length][j];
+				}
+			}
+		}
+		double[][] pcaResult = PCA(inputTrainTest, nPCAFeature);
+		double[][] inputTrainPCA = new double[inputTrain.length][pcaResult[0].length];
+		double[][] inputTestPCA = new double[inputTest.length][pcaResult[0].length];
+		for (int i = 0; i < pcaResult.length; i++) {
+			for (int j = 0; j < pcaResult[i].length; j++) {
+				if (i < inputTrainPCA.length) {
+					inputTrainPCA[i][j] = pcaResult[i][j];
+				} else {
+					inputTestPCA[i - inputTrainPCA.length][j] = pcaResult[i][j];
+				}
+			}
+		}
+
+		// Prepare network collector
 		ArrayList<BasicNetwork> networkList = null;
 		ArrayList<MLP> networkList2 = null;
 		switch (NN_Lib) {
@@ -93,18 +127,22 @@ public class LocalNN {
 			double[][] trainingData;
 			switch (METHOD) {
 				case Cerri:
-					trainingData = i == 0 ? inputTrain : predictedOutputTrain.get(i - 1);
+					trainingData = i == 0 ? (usePCAinFirstLevel ? inputTrainPCA : inputTrain) : predictedOutputTrain.get(i - 1);
 					break;
 				case Jo1:
 				default:
 					if (i == 0) {
-						trainingData = inputTrain;
+						trainingData = usePCAinFirstLevel ? inputTrainPCA : inputTrain;
 					} else {
-						trainingData = Utility.concat(predictedOutputTrain.get(i - 1), inputTrain);
+						trainingData = Utility.concat(predictedOutputTrain.get(i - 1), usePCAinOtherLevel ? inputTrainPCA : inputTrain);
 					}
 					break;
 				case Jo2:
-					trainingData = inputTrain;
+					if (i == 0) {
+						trainingData = usePCAinFirstLevel ? inputTrainPCA : inputTrain;
+					} else {
+						trainingData = usePCAinOtherLevel ? inputTrainPCA : inputTrain;
+					}
 			}
 			int nInput = trainingData[0].length;
 
@@ -128,9 +166,10 @@ public class LocalNN {
 
 					do {
 						train.iteration();
-						 System.out.println("Epoch #" + epoch + " Error:" + train.getError());
+//						 System.out.println("Epoch #" + epoch + " Error:" + train.getError());
 						epoch++;
 					} while (train.getError() > MIN_ERROR && epoch < MAX_EPOCH);
+					System.out.println("NN size: " + nInput + " " + (int) (nInput * HIDEEN_NEURAL_FRACTION[i]) + " " + nClassList[i]);
 					System.out.println("Level " + (i + 1) + " Epoch #" + epoch + " Error: " + train.getError());
 					train.finishTraining();
 
@@ -168,18 +207,22 @@ public class LocalNN {
 			double[][] testingData;
 			switch (METHOD) {
 				case Cerri:
-					testingData = i == 0 ? inputTest : predictedOutputTest.get(i - 1);
+					testingData = i == 0 ? (usePCAinFirstLevel ? inputTestPCA : inputTest) : predictedOutputTest.get(i - 1);
 					break;
 				case Jo1:
 				default:
 					if (i == 0) {
-						testingData = inputTest;
+						testingData = usePCAinFirstLevel ? inputTestPCA : inputTest;
 					} else {
-						testingData = Utility.concat(predictedOutputTest.get(i - 1), inputTest);
+						testingData = Utility.concat(predictedOutputTest.get(i - 1), usePCAinOtherLevel ? inputTestPCA : inputTest);
 					}
 					break;
 				case Jo2:
-					testingData = inputTest;
+					if (i == 0) {
+						testingData = usePCAinFirstLevel ? inputTestPCA : inputTest;
+					} else {
+						testingData = usePCAinOtherLevel ? inputTestPCA : inputTest;
+					}
 			}
 
 			double[][] newPredictedOutputTest = new double[dataTest.dataEntries.size()][nClassList[i]];
@@ -352,5 +395,40 @@ public class LocalNN {
 				}
 			}
 		}
+	}
+
+	private static double[][] PCA(double[][] data, int newN) {
+		// Create new Instances
+		FastVector atts = new FastVector();
+		for (int i = 0; i < data[0].length; i++) {
+			atts.addElement(new weka.core.Attribute("att" + i));
+		}
+		Instances instances = new Instances("GG", atts, 0);
+		for (int i = 0; i < data.length; i++) {
+			instances.add(new Instance(1.0, data[i]));
+		}
+
+		// PCA and normalize
+		PrincipalComponents pca = new PrincipalComponents();
+		pca.setMaximumAttributeNames(newN);
+		pca.setMaximumAttributes(newN);
+		Normalize norm = new Normalize();
+		
+		try {
+			pca.setInputFormat(instances);
+			instances = Filter.useFilter(instances, pca);
+			norm.setInputFormat(instances);
+			instances = Filter.useFilter(instances, norm);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		double[][] res = new double[instances.numInstances()][instances.numAttributes()];
+		for (int i = 0; i < res.length; i++) {
+			Instance inst = instances.instance(i);
+			for (int j = 0; j < res[i].length; j++) {
+				res[i][j] = inst.value(j);
+			}
+		}
+		return res;
 	}
 }

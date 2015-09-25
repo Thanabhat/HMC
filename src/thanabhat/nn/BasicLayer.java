@@ -110,7 +110,7 @@ public class BasicLayer {
 		for (int i = 0; i < nOut; i++) {
 			System.out.print(String.format("%.4f", b[i]));
 			for (int j = 0; j < nIn; j++) {
-				System.out.print(String.format(" %.4f", w[i][j]));
+				System.out.print(String.format("\t%.4f", w[i][j]));
 			}
 			System.out.println();
 		}

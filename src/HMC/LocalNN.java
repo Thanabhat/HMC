@@ -49,10 +49,10 @@ public class LocalNN {
 		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.4, 0.4, 0.4, 0.4, 0.4, 0.4 };
 //		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 0.8, 0.8, 0.8, 0.8, 0.8, 0.8 };
 //		final double[] HIDEEN_NEURAL_FRACTION = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
-		final int MAX_EPOCH = 200;
+		final int MAX_EPOCH = 1000;
 		final double MIN_ERROR = 0.001;
 		final Method METHOD = Method.Jo1;
-		final NeuralNetworkLib NN_Lib = NeuralNetworkLib.thanabhat;
+		final NeuralNetworkLib NN_Lib = NeuralNetworkLib.encog;
 		final double THANABHAT_LR = 0.5;
 		final double THANABHAT_LRReg = 0.0;
 
